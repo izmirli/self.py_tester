@@ -11,11 +11,32 @@ import self as sp
 
 class SelfPyTestCase(unittest.TestCase):
 
-    def test_ex_4_2_2(self):
-        self.assertIn('ex_4_2_2', dir(sp), 'Function to found')
-        cases = (('sun', 'NOT'), ('bob', 'OK'), ('Borrow or rob', 'OK'))
+    # def test_ex_4_2_2(self):
+    #     self.assertIn('ex_4_2_2', dir(sp), 'Function to found')
+    #     cases = (('sun', 'NOT'), ('bob', 'OK'), ('Borrow or rob', 'OK'))
+    #     for case in cases:
+    #         self.assertEqual(sp.ex_4_2_2(case[0]), case[1])
+
+    def test_ex_5_3_4(self):
+        self.assertIn('last_early', dir(sp), 'Function to found')
+        cases = (
+            ("happy birthday", True),
+            ("best of luck", False),
+            ("Wow", True),
+            ("X", False),
+        )
         for case in cases:
-            self.assertEqual(sp.ex_4_2_2(case[0]), case[1])
+            self.assertEqual(sp.last_early(case[0]), case[1])
+
+    def test_ex_5_3_5(self):
+        self.assertIn('distance', dir(sp), 'Function to found')
+        cases = (
+            ([1, 2, 10], True),
+            ([4, 5, 3], False),
+            ([1, 2, 3], False),
+        )
+        for case in cases:
+            self.assertEqual(sp.distance(*case[0]), case[1])
 
     def test_ex_6_3_1(self):
         self.assertIn('are_lists_equal', dir(sp), 'Function to found')
