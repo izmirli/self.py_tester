@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import patch
 from io import StringIO
 import sys
+from collections import deque
 
 import self as sp
 
@@ -179,6 +180,74 @@ class SelfPyTestCase(unittest.TestCase):
         )
         for case in cases:
             self.assertEqual(sp.numbers_letters_count(case[0]), case[1], case[2])
+
+    def test_ex_7_2_4(self):
+        self.assertIn('seven_boom', dir(sp), 'Function to found')
+        self.assertEqual(
+            sp.seven_boom(17),
+            ['BOOM', 1, 2, 3, 4, 5, 6, 'BOOM', 8, 9, 10, 11, 12, 13, 'BOOM', 15, 16, 'BOOM']
+        )
+
+    def test_ex_7_2_5(self):
+        self.assertIn('sequence_del', dir(sp), 'Function to found')
+        cases = (
+            ('ppyyyyythhhhhooonnnnn', 'python'),
+            ('SSSSsssshhhh', 'Ssh'),
+            ('Heeyyy   yyouuuu!!!', 'Hey you!'),
+        )
+        for case in cases:
+            self.assertEqual(sp.sequence_del(case[0]), case[1])
+
+    @unittest.skip('To test Ex 7.2.6, comment this line')
+    def test_ex_7_2_6(self):
+        self.assertIn('ex_7_2_6', dir(sp), 'Function to found')
+        in_out_pairs = (
+            ([1], 'Milk,Cottage,Tomatoes'),  # print list
+            ([2], '3'),  # print list length
+            ([3, 'Cottage'], 'True'),  # is given product in list
+            ([3, 'Beer'], 'False'),
+            ([4, 'Cottage'], '1'),  # count given product in list
+            ([5, 'Cottage'], None),  # remove given product from list
+            ([6, '7UP'], None),  # add given product to list
+            ([6, '7UP'], None),
+            ([4, '7UP'], '2'),
+            ([6, 'GU'], None),
+            ([7], '7UP,7UP,GU'),  # print all illegal products
+            ([6, 'Milk'], None),
+            ([1], 'Milk,Tomatoes,7UP,7UP,GU,Milk'),
+            ([8], None),  # remove duplicates from list
+            ([1], ['Milk', 'Tomatoes', '7UP', 'GU']),
+            ([9], None),  # Exit
+        )
+        mock_inputs = [item for in_list in in_out_pairs for item in in_list[0]]
+        mock_inputs.insert(0, "Milk,Cottage,Tomatoes")
+        expected_out = [item[1] for item in in_out_pairs]
+
+        with patch('sys.stdout', new=StringIO()) as fake_stdout:
+            with patch('builtins.input', side_effect=mock_inputs):
+                sp.ex_7_2_6()
+        to_stdout: str = fake_stdout.getvalue()
+        # print(f'\nstdout:\n{to_stdout}', file=sys.stderr)
+        output = deque(to_stdout.split('\n'))
+        for expected_line in expected_out:
+            if expected_line is None:
+                continue
+            output_line = output.popleft().strip()
+            if isinstance(expected_line, list):
+                output_to_list = output_line.split(',')
+                self.assertListEqual(sorted(output_to_list), sorted(expected_line))
+            else:
+                self.assertEqual(output_line, expected_line)
+
+    def test_ex_7_2_7(self):
+        self.assertIn('arrow', dir(sp), 'Function to found')
+        cases = (
+            (['#', 1], '#\n'),
+            (['>', 2], '>\n>>\n>\n'),
+            (['*', 5], '*\n**\n***\n****\n*****\n****\n***\n**\n*\n'),
+        )
+        for case in cases:
+            self.assertEqual(sp.arrow(*case[0]), case[1])
 
 
 if __name__ == '__main__':
