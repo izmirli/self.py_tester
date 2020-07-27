@@ -38,6 +38,72 @@ class SelfPyTestCase(unittest.TestCase):
         for case in cases:
             self.assertEqual(sp.distance(*case[0]), case[1])
 
+    def test_ex_5_3_6(self):
+        self.assertIn('filter_teens', dir(sp), 'Function to found')
+        cases = (
+            ([], 0, 'no args, default ages'),
+            ([20], 20, 'one grownup, missing 2 args - default teen ages'),
+            ([1, 2, 3], 6, 'all my children < 13'),
+            ([2, 13, 1], 3, '2 kids, one teen'),
+            ([2, 1, 15], 18, '2 kids, one special teen'),
+        )
+        for case in cases:
+            self.assertEqual(sp.filter_teens(*case[0]), case[1], case[2])
+
+    def test_ex_5_3_7(self):
+        self.assertIn('chocolate_maker', dir(sp), 'Function to found')
+        cases = (
+            ([3, 1, 8], True),
+            ([3, 1, 9], False),
+            ([3, 2, 9], False),
+            ([3, 2, 10], True),
+            ([0, 2, 10], True),
+            ([10, 0, 10], True),
+        )
+        for case in cases:
+            self.assertEqual(sp.chocolate_maker(*case[0]), case[1])
+
+    def test_ex_5_5_1(self):
+        self.assertIn('is_valid_input', dir(sp), 'Function to found')
+        cases = (
+            ('a', True, 'a is valid'),
+            ('A', True, 'A is valid'),
+            ('$', False, '$ is invalid'),
+            ('ab', False, '"ab" is invalid'),
+            ('app$', False, '"app$" is invalid'),
+            ('', False, '"" (empty string) is invalid'),
+            ('א', False, 'א is invalid'),
+        )
+        for case in cases:
+            self.assertEqual(sp.is_valid_input(case[0]), case[1], case[2])
+
+    def test_ex_6_1_2(self):
+        self.assertIn('shift_left', dir(sp), 'Function to found')
+        cases = (
+            ([0, 1, 2], [1, 2, 0]),
+            (['monkey', 2.0, 1], [2.0, 1, 'monkey']),
+        )
+        for case in cases:
+            self.assertEqual(sp.shift_left(case[0]), case[1])
+
+    def test_ex_6_2_3(self):
+        self.assertIn('format_list', dir(sp), 'Function to found')
+        cases = (
+            (["hydrogen", "helium", "lithium", "beryllium", "boron", "magnesium"],
+             'hydrogen, lithium, boron and magnesium'),
+            (["hydrogen", "helium"], 'hydrogen and helium'),
+        )
+        for case in cases:
+            self.assertEqual(sp.format_list(case[0]), case[1])
+
+    def test_ex_6_2_4(self):
+        self.assertIn('extend_list_x', dir(sp), 'Function to found')
+        cases = (
+            ([[4, 5, 6], [1, 2, 3]], [1, 2, 3, 4, 5, 6]),
+        )
+        for case in cases:
+            self.assertEqual(sp.extend_list_x(*case[0]), case[1])
+
     def test_ex_6_3_1(self):
         self.assertIn('are_lists_equal', dir(sp), 'Function to found')
         list1 = [0.6, 1, 2, 3]
