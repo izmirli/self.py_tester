@@ -1,5 +1,6 @@
-"""
+"""Automatic tests for self.py course.
 
+Course URL: https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/
 """
 import unittest
 from unittest.mock import patch
@@ -248,6 +249,28 @@ class SelfPyTestCase(unittest.TestCase):
         )
         for case in cases:
             self.assertEqual(sp.arrow(*case[0]), case[1])
+
+    def test_ex_7_3_1(self):
+        self.assertIn('show_hidden_word', dir(sp), 'Function to found')
+        cases = (
+            (["mammals", ['s', 'p', 'j', 'i', 'm', 'k']], 'm _ m m _ _ s'),
+            (["amphibians", ['q', 'j', 'e', 't', 'k']], '_ _ _ _ _ _ _ _ _ _'),
+            (["dog", []], '_ _ _'),
+            (["banana", ['a', 'b', 'c', 'n']], 'b a n a n a'),
+        )
+        for case in cases:
+            self.assertEqual(sp.show_hidden_word(*case[0]), case[1])
+
+    def test_ex_7_3_2(self):
+        self.assertIn('check_win', dir(sp), 'Function to found')
+        cases = (
+            (["mammals", ['s', 'p', 'j', 'i', 'm', 'k']], False),
+            (["amphibians", ['q', 'j', 'e', 't', 'k']], False),
+            (["dog", []], False),
+            (["banana", ['a', 'b', 'c', 'n']], True),
+        )
+        for case in cases:
+            self.assertEqual(sp.check_win(*case[0]), case[1])
 
 
 if __name__ == '__main__':
