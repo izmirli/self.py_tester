@@ -6,6 +6,7 @@ import unittest
 from unittest.mock import patch
 from io import StringIO
 import sys
+import os
 from collections import deque
 
 import self as sp
@@ -70,7 +71,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_5_3_4(self):
         """Testing last_early function"""
-        self.assertIn('last_early', dir(sp), 'Function to found')
+        if 'last_early' not in dir(sp):
+            self.skipTest('Function last_early is missing')
         cases = (
             ("happy birthday", True),
             ("best of luck", False),
@@ -82,7 +84,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_5_3_5(self):
         """Testing distance function"""
-        self.assertIn('distance', dir(sp), 'Function to found')
+        if 'distance' not in dir(sp):
+            self.skipTest('Function distance is missing')
         cases = (
             ([1, 2, 10], True),
             ([4, 5, 3], False),
@@ -93,7 +96,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_5_3_6(self):
         """Testing filter_teens function"""
-        self.assertIn('filter_teens', dir(sp), 'Function to found')
+        if 'filter_teens' not in dir(sp):
+            self.skipTest('Function filter_teens is missing')
         cases = (
             ([], 0, 'no args, default ages'),
             ([20], 20, 'one grownup, missing 2 args - default teen ages'),
@@ -106,7 +110,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_5_3_7(self):
         """Testing chocolate_maker function"""
-        self.assertIn('chocolate_maker', dir(sp), 'Function to found')
+        if 'chocolate_maker' not in dir(sp):
+            self.skipTest('Function chocolate_maker is missing')
         cases = (
             ([3, 1, 8], True),
             ([3, 1, 9], False),
@@ -120,7 +125,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_5_5_1(self):
         """Testing is_valid_input function"""
-        self.assertIn('is_valid_input', dir(sp), 'Function to found')
+        if 'is_valid_input' not in dir(sp):
+            self.skipTest('Function is_valid_input is missing')
         cases = (
             ('a', True, 'a is valid'),
             ('A', True, 'A is valid'),
@@ -135,7 +141,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_6_1_2(self):
         """Testing shift_left function"""
-        self.assertIn('shift_left', dir(sp), 'Function to found')
+        if 'shift_left' not in dir(sp):
+            self.skipTest('Function shift_left is missing')
         cases = (
             ([0, 1, 2], [1, 2, 0]),
             (['monkey', 2.0, 1], [2.0, 1, 'monkey']),
@@ -145,7 +152,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_6_2_3(self):
         """Testing format_list function"""
-        self.assertIn('format_list', dir(sp), 'Function to found')
+        if 'format_list' not in dir(sp):
+            self.skipTest('Function format_list is missing')
         cases = (
             (["hydrogen", "helium", "lithium", "beryllium", "boron",
               "magnesium"], 'hydrogen, lithium, boron and magnesium'),
@@ -156,7 +164,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_6_2_4(self):
         """Testing extend_list_x function"""
-        self.assertIn('extend_list_x', dir(sp), 'Function to found')
+        if 'extend_list_x' not in dir(sp):
+            self.skipTest('Function extend_list_x is missing')
         cases = (
             ([[4, 5, 6], [1, 2, 3]], [1, 2, 3, 4, 5, 6]),
         )
@@ -165,7 +174,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_6_3_1(self):
         """Testing are_lists_equal function"""
-        self.assertIn('are_lists_equal', dir(sp), 'Function to found')
+        if 'are_lists_equal' not in dir(sp):
+            self.skipTest('Function are_lists_equal is missing')
         list1 = [0.6, 1, 2, 3]
         list2 = [3, 2, 0.6, 1]
         list3 = [9, 0, 5, 10.5]
@@ -174,7 +184,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_6_3_2(self):
         """Testing longest function"""
-        self.assertIn('longest', dir(sp), 'Function to found')
+        if 'longest' not in dir(sp):
+            self.skipTest('Function longest is missing')
         cases = (
             (["111", "234", "2000", "goru", "birthday", "09"], "birthday"),
             (["nanu", "nanu", "mork", "and", "Williams", "mindy", "Robin"],
@@ -185,7 +196,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_6_4_1(self):
         """Testing check_valid_input function"""
-        self.assertIn('check_valid_input', dir(sp), 'Function to found')
+        if 'check_valid_input' not in dir(sp):
+            self.skipTest('Function check_valid_input is missing')
         cases = (
             (['C', ['a', 'b', 'c']], False, 'in old letters, but uppercase.'),
             (['ep', ['a', 'b', 'c']], False, '2 letters'),
@@ -198,7 +210,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_6_4_2(self):
         """Testing try_update_letter_guessed function"""
-        self.assertIn('try_update_letter_guessed', dir(sp), 'Function missing')
+        if 'try_update_letter_guessed' not in dir(sp):
+            self.skipTest('Function try_update_letter_guessed is missing')
         old_letters = ['a', 'p', 'c', 'f']
         cases = (
             ('A', old_letters, 'X\na -> c -> f -> p\n', False,
@@ -219,7 +232,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_7_1_4(self):
         """Testing squared_numbers function"""
-        self.assertIn('squared_numbers', dir(sp), 'Function to found')
+        if 'squared_numbers' not in dir(sp):
+            self.skipTest('Function squared_numbers is missing')
         cases = (
             (4, 8, [16, 25, 36, 49, 64]),
             (-3, 3, [9, 4, 1, 0, 1, 4, 9]),
@@ -229,7 +243,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_7_2_1(self):
         """Testing is_greater function"""
-        self.assertIn('is_greater', dir(sp), 'Function to found')
+        if 'is_greater' not in dir(sp):
+            self.skipTest('Function is_greater is missing')
         base_list = [1, 30, 25, 60, 27, 28]
         cases = (
             ([base_list, 28], [30, 60], 'return 2 out of 6'),
@@ -241,7 +256,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_7_2_2(self):
         """Testing numbers_letters_count function"""
-        self.assertIn('numbers_letters_count', dir(sp), 'Function to found')
+        if 'numbers_letters_count' not in dir(sp):
+            self.skipTest('Function numbers_letters_count is missing')
         cases = (
             ('Python 3.6.3', [3, 9], 'example test'),
             ('363', [3, 0], 'no letters'),
@@ -253,7 +269,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_7_2_4(self):
         """Testing seven_boom function"""
-        self.assertIn('seven_boom', dir(sp), 'Function to found')
+        if 'seven_boom' not in dir(sp):
+            self.skipTest('Function seven_boom is missing')
         self.assertEqual(
             sp.seven_boom(17),
             ['BOOM', 1, 2, 3, 4, 5, 6, 'BOOM', 8, 9, 10, 11, 12, 13, 'BOOM',
@@ -262,7 +279,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_7_2_5(self):
         """Testing sequence_del function"""
-        self.assertIn('sequence_del', dir(sp), 'Function to found')
+        if 'sequence_del' not in dir(sp):
+            self.skipTest('Function sequence_del is missing')
         cases = (
             ('ppyyyyythhhhhooonnnnn', 'python'),
             ('SSSSsssshhhh', 'Ssh'),
@@ -274,7 +292,8 @@ class SelfPyTestCase(unittest.TestCase):
     @unittest.skip('To test Ex 7.2.6, comment this line')
     def test_ex_7_2_6(self):
         """Testing Ex 7.2.6"""
-        self.assertIn('ex_7_2_6', dir(sp), 'Function to found')
+        if 'ex_7_2_6' not in dir(sp):
+            self.skipTest('Function ex_7_2_6 is missing')
         in_out_pairs = (
             ([1], 'Milk,Cottage,Tomatoes'),  # print list
             ([2], '3'),  # print list length
@@ -316,7 +335,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_7_2_7(self):
         """Testing arrow function"""
-        self.assertIn('arrow', dir(sp), 'Function to found')
+        if 'arrow' not in dir(sp):
+            self.skipTest('Function arrow is missing')
         cases = (
             (['#', 1], '#\n'),
             (['>', 2], '>\n>>\n>\n'),
@@ -327,7 +347,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_7_3_1(self):
         """Testing show_hidden_word function"""
-        self.assertIn('show_hidden_word', dir(sp), 'Function to found')
+        if 'show_hidden_word' not in dir(sp):
+            self.skipTest('Function show_hidden_word is missing')
         cases = (
             (["mammals", ['s', 'p', 'j', 'i', 'm', 'k']], 'm _ m m _ _ s'),
             (["amphibians", ['q', 'j', 'e', 't', 'k']], '_ _ _ _ _ _ _ _ _ _'),
@@ -339,7 +360,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_7_3_2(self):
         """Testing check_win function"""
-        self.assertIn('check_win', dir(sp), 'Function to found')
+        if 'check_win' not in dir(sp):
+            self.skipTest('Function check_win is missing')
         cases = (
             (["mammals", ['s', 'p', 'j', 'i', 'm', 'k']], False),
             (["amphibians", ['q', 'j', 'e', 't', 'k']], False),
@@ -351,7 +373,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_8_2_2(self):
         """Testing sort_prices function"""
-        self.assertIn('sort_prices', dir(sp), 'Function to found')
+        if 'sort_prices' not in dir(sp):
+            self.skipTest('Function sort_prices is missing')
         cases = (
             ([('milk', '5.5'), ('candy', '2.5'), ('bread', '9.0')],
              [('bread', '9.0'), ('milk', '5.5'), ('candy', '2.5')]),
@@ -363,7 +386,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_8_2_3(self):
         """Testing mult_tuple function"""
-        self.assertIn('mult_tuple', dir(sp), 'Function to found')
+        if 'mult_tuple' not in dir(sp):
+            self.skipTest('Function mult_tuple is missing')
         cases = (
             ([(1, 2), (4, 5)],
              ((1, 4), (4, 1), (1, 5), (5, 1), (2, 4), (4, 2), (2, 5), (5, 2))),
@@ -380,7 +404,8 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_8_2_4(self):
         """Testing sort_anagrams function"""
-        self.assertIn('sort_anagrams', dir(sp), 'Function to found')
+        if 'sort_anagrams' not in dir(sp):
+            self.skipTest('Function sort_anagrams is missing')
         list_of_words = [
             'deltas', 'retainers', 'desalt', 'pants', 'slated', 'generating',
             'ternaries', 'smelters', 'termless', 'salted', 'staled',
@@ -396,7 +421,8 @@ class SelfPyTestCase(unittest.TestCase):
     @unittest.skip('To test Ex 8.3.2, comment this line')
     def test_ex_8_3_2(self):
         """Testing Ex 8.3.2"""
-        self.assertIn('ex_8_3_2', dir(sp), 'Function to found')
+        if 'ex_8_3_2' not in dir(sp):
+            self.skipTest('Function ex_8_3_2 is missing')
         person = {
             'first_name': 'Mariah',
             'last_name': 'Carey',
@@ -432,22 +458,24 @@ class SelfPyTestCase(unittest.TestCase):
 
     def test_ex_8_3_3(self):
         """Testing count_chars function"""
-        self.assertIn('count_chars', dir(sp), 'Function to found')
+        if 'count_chars' not in dir(sp):
+            self.skipTest('Function count_chars is missing')
         magic_str = "abra cadabra"
         expected = {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
         self.assertDictEqual(sp.count_chars(magic_str), expected)
 
     def test_ex_8_3_4(self):
         """Testing inverse_dict function"""
-        self.assertIn('inverse_dict', dir(sp), 'Function to found')
+        if 'inverse_dict' not in dir(sp):
+            self.skipTest('Function inverse_dict is missing')
         course_dict = {'I': 3, 'love': 3, 'self.py!': 2}
         expected = {3: ['I', 'love'], 2: ['self.py!']}
         self.assertDictEqual(sp.inverse_dict(course_dict), expected)
 
     def test_ex_8_4_1(self):
         """Testing print_hangman function"""
-        self.assertIn('print_hangman', dir(sp), 'Function to found')
-        # HANGMAN_ASCII_PHASE
+        if 'print_hangman' not in dir(sp):
+            self.skipTest('Function print_hangman is missing')
         for miss in range(7):
             with patch('sys.stdout', new=StringIO()) as fake_stdout:
                 sp.print_hangman(miss)
@@ -459,6 +487,24 @@ class SelfPyTestCase(unittest.TestCase):
             # print(f'\nto_stdout:\n{to_stdout}<<<\n'
             #       f'cleaned_output:\n{cleaned_output}<<<', file=sys.stderr)
             self.assertEqual(cleaned_output, HANGMAN_ASCII_PHASE[miss])
+
+    def test_ex_9_1_1(self):
+        """Testing are_files_equal function"""
+        if 'are_files_equal' not in dir(sp):
+            self.skipTest('Function are_files_equal is missing')
+        cases = (
+            ('f01.txt', 'f02.txt', False, 'unequal files'),
+            ('f01.txt', 'f03.txt', True, 'equal files'),
+        )
+        for case in cases:
+            outcome = sp.are_files_equal(os.path.abspath(case[0]),
+                                         os.path.abspath(case[1]))
+            self.assertTrue(outcome == case[2], case[3])
+
+    def test_ex_9_1_2(self):
+        """Testing Ex 9.1.2"""
+        if 'ex_9_1_2' not in dir(sp):
+            self.skipTest('Function ex_9_1_2 is missing')
 
 
 if __name__ == '__main__':
