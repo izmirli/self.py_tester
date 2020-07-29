@@ -19,6 +19,7 @@ class SelfPyTestCase(unittest.TestCase):
     #         self.assertEqual(sp.ex_4_2_2(case[0]), case[1])
 
     def test_ex_5_3_4(self):
+        """Testing last_early function"""
         self.assertIn('last_early', dir(sp), 'Function to found')
         cases = (
             ("happy birthday", True),
@@ -30,6 +31,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.last_early(case[0]), case[1])
 
     def test_ex_5_3_5(self):
+        """Testing distance function"""
         self.assertIn('distance', dir(sp), 'Function to found')
         cases = (
             ([1, 2, 10], True),
@@ -40,6 +42,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.distance(*case[0]), case[1])
 
     def test_ex_5_3_6(self):
+        """Testing filter_teens function"""
         self.assertIn('filter_teens', dir(sp), 'Function to found')
         cases = (
             ([], 0, 'no args, default ages'),
@@ -52,6 +55,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.filter_teens(*case[0]), case[1], case[2])
 
     def test_ex_5_3_7(self):
+        """Testing chocolate_maker function"""
         self.assertIn('chocolate_maker', dir(sp), 'Function to found')
         cases = (
             ([3, 1, 8], True),
@@ -65,6 +69,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.chocolate_maker(*case[0]), case[1])
 
     def test_ex_5_5_1(self):
+        """Testing is_valid_input function"""
         self.assertIn('is_valid_input', dir(sp), 'Function to found')
         cases = (
             ('a', True, 'a is valid'),
@@ -79,6 +84,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.is_valid_input(case[0]), case[1], case[2])
 
     def test_ex_6_1_2(self):
+        """Testing shift_left function"""
         self.assertIn('shift_left', dir(sp), 'Function to found')
         cases = (
             ([0, 1, 2], [1, 2, 0]),
@@ -88,6 +94,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.shift_left(case[0]), case[1])
 
     def test_ex_6_2_3(self):
+        """Testing format_list function"""
         self.assertIn('format_list', dir(sp), 'Function to found')
         cases = (
             (["hydrogen", "helium", "lithium", "beryllium", "boron", "magnesium"],
@@ -98,6 +105,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.format_list(case[0]), case[1])
 
     def test_ex_6_2_4(self):
+        """Testing extend_list_x function"""
         self.assertIn('extend_list_x', dir(sp), 'Function to found')
         cases = (
             ([[4, 5, 6], [1, 2, 3]], [1, 2, 3, 4, 5, 6]),
@@ -106,6 +114,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.extend_list_x(*case[0]), case[1])
 
     def test_ex_6_3_1(self):
+        """Testing are_lists_equal function"""
         self.assertIn('are_lists_equal', dir(sp), 'Function to found')
         list1 = [0.6, 1, 2, 3]
         list2 = [3, 2, 0.6, 1]
@@ -114,6 +123,7 @@ class SelfPyTestCase(unittest.TestCase):
         self.assertEqual(sp.are_lists_equal(list1, list3), False)
 
     def test_ex_6_3_2(self):
+        """Testing longest function"""
         self.assertIn('longest', dir(sp), 'Function to found')
         cases = (
             (["111", "234", "2000", "goru", "birthday", "09"], "birthday"),
@@ -123,6 +133,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.longest(case[0]), case[1])
 
     def test_ex_6_4_1(self):
+        """Testing check_valid_input function"""
         self.assertIn('check_valid_input', dir(sp), 'Function to found')
         cases = (
             ('C', ['a', 'b', 'c'], False, 'in old letters, but uppercase.'),
@@ -135,6 +146,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.check_valid_input(case[0], case[1]), case[2], case[3])
 
     def test_ex_6_4_2(self):
+        """Testing try_update_letter_guessed function"""
         self.assertIn('try_update_letter_guessed', dir(sp), 'Function to found')
         old_letters = ['a', 'p', 'c', 'f']
         cases = (
@@ -148,10 +160,12 @@ class SelfPyTestCase(unittest.TestCase):
             with patch('sys.stdout', new=StringIO()) as fake_stdout:
                 rv = sp.try_update_letter_guessed(case[0], case[1])
                 op = fake_stdout.getvalue()
-                # print(f'rv: {rv}; op: {op}', file=sys.stderr)
+                # print(f'rv: {rv}; op: {op}; op == case[2] {op == case[2]}; '
+                #       f'rv == case[3] {rv == case[3]}', file=sys.stderr)
                 self.assertTrue(op == case[2] and rv == case[3], case[4])
 
     def test_ex_7_1_4(self):
+        """Testing squared_numbers function"""
         self.assertIn('squared_numbers', dir(sp), 'Function to found')
         cases = (
             (4, 8, [16, 25, 36, 49, 64]),
@@ -161,6 +175,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.squared_numbers(case[0], case[1]), case[2])
 
     def test_ex_7_2_1(self):
+        """Testing is_greater function"""
         self.assertIn('is_greater', dir(sp), 'Function to found')
         base_list = [1, 30, 25, 60, 27, 28]
         cases = (
@@ -172,6 +187,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sorted(sp.is_greater(case[0], case[1])), sorted(case[2]))
 
     def test_ex_7_2_2(self):
+        """Testing numbers_letters_count function"""
         self.assertIn('numbers_letters_count', dir(sp), 'Function to found')
         cases = (
             ('Python 3.6.3', [3, 9], 'example test'),
@@ -182,6 +198,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.numbers_letters_count(case[0]), case[1], case[2])
 
     def test_ex_7_2_4(self):
+        """Testing seven_boom function"""
         self.assertIn('seven_boom', dir(sp), 'Function to found')
         self.assertEqual(
             sp.seven_boom(17),
@@ -189,6 +206,7 @@ class SelfPyTestCase(unittest.TestCase):
         )
 
     def test_ex_7_2_5(self):
+        """Testing sequence_del function"""
         self.assertIn('sequence_del', dir(sp), 'Function to found')
         cases = (
             ('ppyyyyythhhhhooonnnnn', 'python'),
@@ -200,6 +218,7 @@ class SelfPyTestCase(unittest.TestCase):
 
     @unittest.skip('To test Ex 7.2.6, comment this line')
     def test_ex_7_2_6(self):
+        """Testing Ex 7.2.6"""
         self.assertIn('ex_7_2_6', dir(sp), 'Function to found')
         in_out_pairs = (
             ([1], 'Milk,Cottage,Tomatoes'),  # print list
@@ -240,6 +259,7 @@ class SelfPyTestCase(unittest.TestCase):
                 self.assertEqual(output_line, expected_line)
 
     def test_ex_7_2_7(self):
+        """Testing arrow function"""
         self.assertIn('arrow', dir(sp), 'Function to found')
         cases = (
             (['#', 1], '#\n'),
@@ -248,6 +268,61 @@ class SelfPyTestCase(unittest.TestCase):
         )
         for case in cases:
             self.assertEqual(sp.arrow(*case[0]), case[1])
+
+    def test_ex_8_2_2(self):
+        """Testing sort_prices function"""
+        self.assertIn('sort_prices', dir(sp), 'Function to found')
+        cases = (
+            ([('milk', '5.5'), ('candy', '2.5'), ('bread', '9.0')],
+             [('bread', '9.0'), ('milk', '5.5'), ('candy', '2.5')]),
+            ([('milk', '-1.0'), ('candy', '-2.5'), ('bread', '9.0')],
+             [('bread', '9.0'), ('milk', '-1.0'), ('candy', '-2.5')]),
+        )
+        for case in cases:
+            self.assertEqual(sp.sort_prices(case[0]), case[1])
+
+    def test_ex_8_2_3(self):
+        """Testing mult_tuple function"""
+        self.assertIn('mult_tuple', dir(sp), 'Function to found')
+        cases = (
+            ([(1, 2), (4, 5)],
+             ((1, 4), (4, 1), (1, 5), (5, 1), (2, 4), (4, 2), (2, 5), (5, 2))),
+            ([(1, 2, 3), (4, 5, 6)],
+             ((1, 4), (1, 5), (1, 6), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5),
+              (3, 6), (4, 1), (5, 1), (6, 1), (4, 2), (5, 2), (6, 2), (4, 3),
+              (5, 3), (6, 3))),
+        )
+        for case in cases:
+            self.assertTupleEqual(
+                tuple(sorted(sp.mult_tuple(*case[0]))),
+                tuple(sorted(case[1]))
+            )
+
+    def test_ex_8_2_4(self):
+        """Testing sort_anagrams function"""
+        self.assertIn('sort_anagrams', dir(sp), 'Function to found')
+        list_of_words = [
+            'deltas', 'retainers', 'desalt', 'pants', 'slated', 'generating',
+            'ternaries', 'smelters', 'termless', 'salted', 'staled',
+            'greatening', 'lasted', 'resmelts'
+        ]
+        expected = sorted([
+            ['deltas', 'desalt', 'slated', 'salted', 'staled', 'lasted'],
+            ['retainers', 'ternaries'], ['pants'],
+            ['generating', 'greatening'], ['smelters', 'termless', 'resmelts']
+        ])
+        self.assertListEqual(sorted(sp.sort_anagrams(list_of_words)), expected)
+
+    # def test_ex_8_3_2(self):
+    #     """Testing ex_8_3_2 function"""
+    #     self.assertIn('ex_8_3_2', dir(sp), 'Function to found')
+
+    def test_ex_8_3_3(self):
+        """Testing count_chars function"""
+        self.assertIn('count_chars', dir(sp), 'Function to found')
+        magic_str = "abra cadabra"
+        expected = {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
+        self.assertDictEqual(sp.count_chars(magic_str), expected)
 
 
 if __name__ == '__main__':
