@@ -10,6 +10,55 @@ from collections import deque
 
 import self as sp
 
+# list of ASCII hangman phases from:
+# https://s3.eu-west-1.amazonaws.com/data.cyber.org.il/virtual_courses/python/rolling_assignment/resources/hangman.txt
+HANGMAN_ASCII_PHASE = [
+    # [0]
+    r"""    x-------x""",
+    # [1]
+    r"""    x-------x
+    |
+    |
+    |
+    |
+    |""",
+    # [2]
+    r"""    x-------x
+    |       |
+    |       0
+    |
+    |
+    |""",
+    # [3]
+    r"""    x-------x
+    |       |
+    |       0
+    |       |
+    |
+    |""",
+    # [4]
+    r"""    x-------x
+    |       |
+    |       0
+    |      /|\
+    |
+    |""",
+    # [5]
+    r"""    x-------x
+    |       |
+    |       0
+    |      /|\
+    |      /
+    |""",
+    # [6]
+    r"""    x-------x
+    |       |
+    |       0
+    |      /|\
+    |      / \
+    |""",
+]
+
 
 class SelfPyTestCase(unittest.TestCase):
 
@@ -98,8 +147,8 @@ class SelfPyTestCase(unittest.TestCase):
         """Testing format_list function"""
         self.assertIn('format_list', dir(sp), 'Function to found')
         cases = (
-            (["hydrogen", "helium", "lithium", "beryllium", "boron", "magnesium"],
-             'hydrogen, lithium, boron and magnesium'),
+            (["hydrogen", "helium", "lithium", "beryllium", "boron",
+              "magnesium"], 'hydrogen, lithium, boron and magnesium'),
             (["hydrogen", "helium"], 'hydrogen and helium'),
         )
         for case in cases:
@@ -128,7 +177,8 @@ class SelfPyTestCase(unittest.TestCase):
         self.assertIn('longest', dir(sp), 'Function to found')
         cases = (
             (["111", "234", "2000", "goru", "birthday", "09"], "birthday"),
-            (["nanu", "nanu", "mork", "and", "Williams", "mindy", "Robin"], "Williams"),
+            (["nanu", "nanu", "mork", "and", "Williams", "mindy", "Robin"],
+             "Williams"),
         )
         for case in cases:
             self.assertEqual(sp.longest(case[0]), case[1])
@@ -137,23 +187,25 @@ class SelfPyTestCase(unittest.TestCase):
         """Testing check_valid_input function"""
         self.assertIn('check_valid_input', dir(sp), 'Function to found')
         cases = (
-            ('C', ['a', 'b', 'c'], False, 'in old letters, but uppercase.'),
-            ('ep', ['a', 'b', 'c'], False, '2 letters'),
-            ('$', ['a', 'b', 'c'], False, 'not alpha'),
-            ('s', ['a', 'b', 'c'], True, 'valid'),
-            ('a', [], True, 'empty old letters'),
+            (['C', ['a', 'b', 'c']], False, 'in old letters, but uppercase.'),
+            (['ep', ['a', 'b', 'c']], False, '2 letters'),
+            (['$', ['a', 'b', 'c']], False, 'not alpha'),
+            (['s', ['a', 'b', 'c']], True, 'valid'),
+            (['a', []], True, 'empty old letters'),
         )
         for case in cases:
-            self.assertEqual(sp.check_valid_input(case[0], case[1]), case[2], case[3])
+            self.assertEqual(sp.check_valid_input(*case[0]), case[1], case[2])
 
     def test_ex_6_4_2(self):
         """Testing try_update_letter_guessed function"""
-        self.assertIn('try_update_letter_guessed', dir(sp), 'Function to found')
+        self.assertIn('try_update_letter_guessed', dir(sp), 'Function missing')
         old_letters = ['a', 'p', 'c', 'f']
         cases = (
-            ('A', old_letters, 'X\na -> c -> f -> p\n', False, 'in old letters, but uppercase.'),
+            ('A', old_letters, 'X\na -> c -> f -> p\n', False,
+             'in old letters, but uppercase.'),
             ('s', old_letters, '', True, 'OK guess "s"'),
-            ('$', old_letters, 'X\na -> c -> f -> p -> s\n', False, 'not alpha'),
+            ('$', old_letters, 'X\na -> c -> f -> p -> s\n', False,
+             'not alpha'),
             ('d', old_letters, '', True, 'OK guess "d"'),
             # ('a', [], True, 'empty old letters'),
         )
@@ -180,12 +232,12 @@ class SelfPyTestCase(unittest.TestCase):
         self.assertIn('is_greater', dir(sp), 'Function to found')
         base_list = [1, 30, 25, 60, 27, 28]
         cases = (
-            (base_list, 28, [30, 60], 'return 2 out of 6'),
-            (base_list, 0, [1, 30, 25, 60, 27, 28], 'return all 6'),
-            (base_list, 60, [], 'return empty'),
+            ([base_list, 28], [30, 60], 'return 2 out of 6'),
+            ([base_list, 0], [1, 30, 25, 60, 27, 28], 'return all 6'),
+            ([base_list, 60], [], 'return empty'),
         )
         for case in cases:
-            self.assertEqual(sorted(sp.is_greater(case[0], case[1])), sorted(case[2]))
+            self.assertEqual(sorted(sp.is_greater(*case[0])), sorted(case[1]))
 
     def test_ex_7_2_2(self):
         """Testing numbers_letters_count function"""
@@ -196,14 +248,16 @@ class SelfPyTestCase(unittest.TestCase):
             ('Python...', [0, 9], 'no digits'),
         )
         for case in cases:
-            self.assertEqual(sp.numbers_letters_count(case[0]), case[1], case[2])
+            self.assertEqual(sp.numbers_letters_count(case[0]), case[1],
+                             case[2])
 
     def test_ex_7_2_4(self):
         """Testing seven_boom function"""
         self.assertIn('seven_boom', dir(sp), 'Function to found')
         self.assertEqual(
             sp.seven_boom(17),
-            ['BOOM', 1, 2, 3, 4, 5, 6, 'BOOM', 8, 9, 10, 11, 12, 13, 'BOOM', 15, 16, 'BOOM']
+            ['BOOM', 1, 2, 3, 4, 5, 6, 'BOOM', 8, 9, 10, 11, 12, 13, 'BOOM',
+             15, 16, 'BOOM']
         )
 
     def test_ex_7_2_5(self):
@@ -255,7 +309,8 @@ class SelfPyTestCase(unittest.TestCase):
             output_line = output.popleft().strip()
             if isinstance(expected_line, list):
                 output_to_list = output_line.split(',')
-                self.assertListEqual(sorted(output_to_list), sorted(expected_line))
+                self.assertListEqual(sorted(output_to_list),
+                                     sorted(expected_line))
             else:
                 self.assertEqual(output_line, expected_line)
 
@@ -271,6 +326,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.arrow(*case[0]), case[1])
 
     def test_ex_7_3_1(self):
+        """Testing show_hidden_word function"""
         self.assertIn('show_hidden_word', dir(sp), 'Function to found')
         cases = (
             (["mammals", ['s', 'p', 'j', 'i', 'm', 'k']], 'm _ m m _ _ s'),
@@ -282,6 +338,7 @@ class SelfPyTestCase(unittest.TestCase):
             self.assertEqual(sp.show_hidden_word(*case[0]), case[1])
 
     def test_ex_7_3_2(self):
+        """Testing check_win function"""
         self.assertIn('check_win', dir(sp), 'Function to found')
         cases = (
             (["mammals", ['s', 'p', 'j', 'i', 'm', 'k']], False),
@@ -291,7 +348,7 @@ class SelfPyTestCase(unittest.TestCase):
         )
         for case in cases:
             self.assertEqual(sp.check_win(*case[0]), case[1])
-            
+
     def test_ex_8_2_2(self):
         """Testing sort_prices function"""
         self.assertIn('sort_prices', dir(sp), 'Function to found')
@@ -336,9 +393,42 @@ class SelfPyTestCase(unittest.TestCase):
         ])
         self.assertListEqual(sorted(sp.sort_anagrams(list_of_words)), expected)
 
-    # def test_ex_8_3_2(self):
-    #     """Testing ex_8_3_2 function"""
-    #     self.assertIn('ex_8_3_2', dir(sp), 'Function to found')
+    @unittest.skip('To test Ex 8.3.2, comment this line')
+    def test_ex_8_3_2(self):
+        """Testing Ex 8.3.2"""
+        self.assertIn('ex_8_3_2', dir(sp), 'Function to found')
+        person = {
+            'first_name': 'Mariah',
+            'last_name': 'Carey',
+            'birth_date': '27.03.1970',
+            'hobbies': ['Sing', 'Compose', 'Act'],
+        }
+        cases = (
+            (1, 'Carey', None),
+            (2, 'March', None),
+            (3, '3', None),
+            (4, 'Act', None),
+            (5, '', ('hobbies', 3, 'Cooking')),
+            (6, '(27, 3, 1970)', None),
+            (7, '50', ('age', None, '50')),
+        )
+        for case in cases:
+            mock_inputs = [case[0]]
+            with patch('sys.stdout', new=StringIO()) as fake_stdout:
+                with patch('builtins.input', side_effect=mock_inputs):
+                    sp.ex_8_3_2(person)
+            to_stdout: str = fake_stdout.getvalue()
+            found = to_stdout.strip()
+            if case[1] != '':
+                self.assertEqual(found.casefold(), case[1].casefold())
+
+            if case[2] is not None:
+                dict_check: tuple = case[2]
+                found = person[dict_check[0]]
+                if dict_check[1] is not None:
+                    found = found[dict_check[1]]
+                expected: str = dict_check[2]
+                self.assertEqual(str(found).casefold(), expected.casefold())
 
     def test_ex_8_3_3(self):
         """Testing count_chars function"""
@@ -346,6 +436,29 @@ class SelfPyTestCase(unittest.TestCase):
         magic_str = "abra cadabra"
         expected = {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
         self.assertDictEqual(sp.count_chars(magic_str), expected)
+
+    def test_ex_8_3_4(self):
+        """Testing inverse_dict function"""
+        self.assertIn('inverse_dict', dir(sp), 'Function to found')
+        course_dict = {'I': 3, 'love': 3, 'self.py!': 2}
+        expected = {3: ['I', 'love'], 2: ['self.py!']}
+        self.assertDictEqual(sp.inverse_dict(course_dict), expected)
+
+    def test_ex_8_4_1(self):
+        """Testing print_hangman function"""
+        self.assertIn('print_hangman', dir(sp), 'Function to found')
+        # HANGMAN_ASCII_PHASE
+        for miss in range(7):
+            with patch('sys.stdout', new=StringIO()) as fake_stdout:
+                sp.print_hangman(miss)
+            to_stdout: str = fake_stdout.getvalue()
+            cleaned_output = '\n'.join(
+                [line.rstrip() for line in to_stdout.split('\n')
+                 if line.strip() != '']
+            )
+            # print(f'\nto_stdout:\n{to_stdout}<<<\n'
+            #       f'cleaned_output:\n{cleaned_output}<<<', file=sys.stderr)
+            self.assertEqual(cleaned_output, HANGMAN_ASCII_PHASE[miss])
 
 
 if __name__ == '__main__':
