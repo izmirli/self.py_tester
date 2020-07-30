@@ -506,6 +506,28 @@ class SelfPyTestCase(unittest.TestCase):
         if 'ex_9_1_2' not in dir(sp):
             self.skipTest('Function ex_9_1_2 is missing')
 
+    @unittest.skip('To check your Python code against PEP-8 style conventions, '
+                   'comment this line')
+    def test_pycodestyle(self):
+        """"Test that your code conform to PEP-8."""
+        try:
+            import pycodestyle
+        except ImportError as ex:
+            print(f'ImportError data: ', file=sys.stderr)
+            self.skipTest(f'{ex}. Run "pip install pycodestyle" before to '
+                          'use this test.')
+        style = pycodestyle.StyleGuide(
+            repeat=False,  # show just the first occurrence of each error.
+            show_pep8=True,  # show the relevant text of PEP 8 for each error.
+            show_source=True,  # show source code for each error.
+            statistics=True,  # [Not working here] count errors and warnings.
+        )
+        result = style.check_files(['self.py'])
+        self.assertEqual(
+            result.total_errors, 0,
+            f"Found {result.total_errors} code style errors (and warnings)."
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
