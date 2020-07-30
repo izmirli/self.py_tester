@@ -7,6 +7,7 @@ from unittest.mock import patch
 from io import StringIO
 import sys
 import os
+import re
 from collections import deque
 
 import self as sp
@@ -62,6 +63,7 @@ HANGMAN_ASCII_PHASE = [
 
 
 class SelfPyTestCase(unittest.TestCase):
+    """Test self.py course exercises"""
 
     # def test_ex_4_2_2(self):
     #     self.assertIn('ex_4_2_2', dir(sp), 'Function to found')
@@ -224,11 +226,14 @@ class SelfPyTestCase(unittest.TestCase):
         )
         for case in cases:
             with patch('sys.stdout', new=StringIO()) as fake_stdout:
-                rv = sp.try_update_letter_guessed(case[0], case[1])
-                op = fake_stdout.getvalue()
-                # print(f'rv: {rv}; op: {op}; op == case[2] {op == case[2]}; '
-                #       f'rv == case[3] {rv == case[3]}', file=sys.stderr)
-                self.assertTrue(op == case[2] and rv == case[3], case[4])
+                return_value = sp.try_update_letter_guessed(case[0], case[1])
+                output = fake_stdout.getvalue()
+                # print(f'rv: {return_value}; output: {output}; '
+                #       f'output == case[2] {output == case[2]}; '
+                #       f'rv == case[3] {return_value == case[3]}',
+                #       file=sys.stderr)
+                self.assertTrue(output == case[2] and
+                                return_value == case[3], case[4])
 
     def test_ex_7_1_4(self):
         """Testing squared_numbers function"""
@@ -535,14 +540,16 @@ yawa ylf dna sgniw ym daerps"""),
             self.skipTest('Function copy_file_content is missing')
         source = os.path.abspath('f01.txt')
         destination = os.path.abspath('f05.txt')
-        with open(source, 'r') as fh:
-            source_content = fh.read()
+        with open(source, 'r') as file_handle:
+            source_content = file_handle.read()
         sp.copy_file_content(source, destination)
-        with open(destination, 'r') as fh:
-            dest_content = fh.read()
-        with open(destination, 'w') as fh:
-            fh.write('-- And Now for Something Completely Different --')
-        self.assertEqual(source_content, dest_content)
+        with open(destination, 'r') as file_handle:
+            destination_content = file_handle.read()
+        with open(destination, 'w') as file_handle:
+            file_handle.write(
+                '-- And Now for Something Completely Different --'
+            )
+        self.assertEqual(source_content, destination_content)
 
     def test_ex_9_2_3(self):
         """Testing who_is_missing function"""
@@ -551,11 +558,11 @@ yawa ylf dna sgniw ym daerps"""),
         source = os.path.abspath('f02.txt')
         expected = 5
         destination = os.path.abspath('found.txt')
-        rv = sp.who_is_missing(source)
-        with open(destination, 'r') as fh:
-            destination_content = fh.readline().strip()
+        return_value = sp.who_is_missing(source)
+        with open(destination, 'r') as file_handle:
+            destination_content = file_handle.readline().strip()
         os.unlink(destination)
-        self.assertIs(rv, expected, 'Return value is not as expected.')
+        self.assertIs(return_value, expected, 'Return value is not as expected.')
         self.assertEqual(destination_content, str(expected))
 
     @unittest.skip('To check your Python code against PEP-8 '
@@ -565,9 +572,8 @@ yawa ylf dna sgniw ym daerps"""),
         try:
             import pycodestyle
         except ImportError as ex:
-            print(f'ImportError data: ', file=sys.stderr)
-            self.skipTest(f'{ex}. Run "pip install pycodestyle" before to '
-                          'use this test.')
+            self.skipTest(f'{ex}. Run "pip install pycodestyle" '
+                          f'to use this test.')
         style = pycodestyle.StyleGuide(
             repeat=False,  # show just the first occurrence of each error.
             show_pep8=True,  # show the relevant text of PEP 8 for each error.
@@ -578,6 +584,54 @@ yawa ylf dna sgniw ym daerps"""),
         self.assertEqual(
             result.total_errors, 0,
             f"Found {result.total_errors} code style errors (and warnings)."
+        )
+
+    @unittest.skip('To check your Python code programming errors and more, '
+                   'comment this line.')
+    def test_pylint(self):
+        """"Lint your code to find programming errors and more."""
+        try:
+            from pylint import epylint as lint
+        except ImportError as ex:
+            self.skipTest(f'{ex}. Run "pip install pylint" to use this test.')
+
+        (pylint_out, pylint_err) = lint.py_run('self.py', return_std=True)
+        output: str = pylint_out.getvalue()
+        rating = ''
+        messages = {}
+        for line in output.split('\n'):
+            # self.py:85: convention (C0116, missing-function-docstring,
+            # ex_4_2_2) Missing function or method docstring
+            match = re.search(r'self\.py:(\d+): (\w+) \(([A-Z]\d+)\, (\S+)\, '
+                              r'(\S+)?\) (\w.+)\s*$', line, re.IGNORECASE)
+            if match:
+                (l_num, l_type, l_code, l_short_msg, l_func, l_long_msg) = \
+                    match.group(1, 2, 3, 4, 5, 6)
+                if l_code not in messages:
+                    messages[l_code] = {
+                        'line': l_num, 'type': l_type, 'code': l_code,
+                        'short_msg': l_short_msg, 'func': l_func,
+                        'long_msg': l_long_msg
+                    }
+                    continue
+
+            match = re.search(r'Your code .* (\d(?:\.\d+)?)/10', line)
+            if match:
+                rating = match.group(1)
+
+        # print(f'pylint_stdout:\n{output}\n')
+        # first_messages = "\n".join([str(d) for d in messages.values()])
+        # print(f'\nrating: {rating}; msg types: {len(messages)}\n{first_messages}')
+        if len(messages) >= 1:
+            print(f'rating: {rating}/10\n\n'
+                  f'Problems found (show first occurrence of each type):')
+            for msg in messages.values():
+                func = f'::{msg["func"]}' if msg["func"] else ""
+                print(f'[Line#{msg["line"]}{func}] '
+                      f'[{msg["type"]}::{msg["code"]}] '
+                      f'{msg["long_msg"]}')
+        self.assertGreaterEqual(
+            float(rating), 9.9, 'Your code\'s pylint rating is too low'
         )
 
 
