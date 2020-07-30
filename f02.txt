@@ -1,18 +1,1 @@
-Beauty is subjective.
-Explicit is recommended, but not required.
-Simple is good, but complex can be good too.
-And although complicated is bad,
-Verbose and complicated is worse.
-Brief is better than long-winded.
-But readability counts.
-So use whitespace to enhance readability.
-Not because you're required to.
-Practicality always beats purity.
-In the face of ambiguity, do what I mean.
-There's more than one way to do it.
-Although that might not be obvious unless you're a Monk.
-At your discretion is better than not at all.
-Although your discretion should be used judiciously.
-Just because the code looks clean doesn't mean it is good.
-Just because the code looks messy doesn't mean it is bad.
-Reuse via CPAN is one honking great idea -- let's do more of that!
+8,1,9,7,4,6,3,2

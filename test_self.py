@@ -544,6 +544,20 @@ yawa ylf dna sgniw ym daerps"""),
             fh.write('-- And Now for Something Completely Different --')
         self.assertEqual(source_content, dest_content)
 
+    def test_ex_9_2_3(self):
+        """Testing who_is_missing function"""
+        if 'who_is_missing' not in dir(sp):
+            self.skipTest('Function who_is_missing is missing')
+        source = os.path.abspath('f02.txt')
+        expected = 5
+        destination = os.path.abspath('found.txt')
+        rv = sp.who_is_missing(source)
+        with open(destination, 'r') as fh:
+            destination_content = fh.readline().strip()
+        os.unlink(destination)
+        self.assertIs(rv, expected, 'Return value is not as expected.')
+        self.assertEqual(destination_content, str(expected))
+
     @unittest.skip('To check your Python code against PEP-8 '
                    'style conventions, comment this line.')
     def test_pycodestyle(self):
