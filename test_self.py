@@ -529,6 +529,21 @@ yawa ylf dna sgniw ym daerps"""),
             found = to_stdout.strip()
             self.assertEqual(found, case[1])
 
+    def test_ex_9_2_2(self):
+        """Testing copy_file_content function"""
+        if 'copy_file_content' not in dir(sp):
+            self.skipTest('Function copy_file_content is missing')
+        source = os.path.abspath('f01.txt')
+        destination = os.path.abspath('f05.txt')
+        with open(source, 'r') as fh:
+            source_content = fh.read()
+        sp.copy_file_content(source, destination)
+        with open(destination, 'r') as fh:
+            dest_content = fh.read()
+        with open(destination, 'w') as fh:
+            fh.write('-- And Now for Something Completely Different --')
+        self.assertEqual(source_content, dest_content)
+
     @unittest.skip('To check your Python code against PEP-8 '
                    'style conventions, comment this line.')
     def test_pycodestyle(self):
