@@ -492,6 +492,7 @@ class SelfPyTestCase(unittest.TestCase):
         """Testing are_files_equal function"""
         if 'are_files_equal' not in dir(sp):
             self.skipTest('Function are_files_equal is missing')
+
         cases = (
             ('f01.txt', 'f02.txt', False, 'unequal files'),
             ('f01.txt', 'f03.txt', True, 'equal files'),
@@ -501,13 +502,35 @@ class SelfPyTestCase(unittest.TestCase):
                                          os.path.abspath(case[1]))
             self.assertTrue(outcome == case[2], case[3])
 
+    @unittest.skip('To check Ex 9.2.1, comment this line.')
     def test_ex_9_1_2(self):
         """Testing Ex 9.1.2"""
         if 'ex_9_1_2' not in dir(sp):
             self.skipTest('Function ex_9_1_2 is missing')
 
-    @unittest.skip('To check your Python code against PEP-8 style conventions, '
-                   'comment this line')
+        words_file = os.path.abspath('f04.txt')
+        cases = (
+            (['sort'], "['about', 'and', 'away', 'believe', 'can', 'day', "
+                       "'every', 'fly', 'i', 'it', 'my', 'night', 'sky', "
+                       "'spread', 'the', 'think', 'touch', 'wings']"),
+            (['rev'], """ylf nac i eveileb i
+yks eht hcuot nac i eveileb i
+yad dna thgin yreve ti tuoba kniht i
+yawa ylf dna sgniw ym daerps"""),
+            (['last', 2], 'i think about it every night and day\n'
+                          'spread my wings and fly away'),
+        )
+        for case in cases:
+            mock_inputs = [words_file, *case[0]]
+            with patch('sys.stdout', new=StringIO()) as fake_stdout:
+                with patch('builtins.input', side_effect=mock_inputs):
+                    sp.ex_9_1_2()
+            to_stdout: str = fake_stdout.getvalue()
+            found = to_stdout.strip()
+            self.assertEqual(found, case[1])
+
+    @unittest.skip('To check your Python code against PEP-8 '
+                   'style conventions, comment this line.')
     def test_pycodestyle(self):
         """"Test that your code conform to PEP-8."""
         try:
