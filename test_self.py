@@ -1,7 +1,35 @@
-"""Automatic tests for self.py course.
+"""Automatic tests for self.py course exercises.
 
+These are 35 unit tests for for exercises from self.py course.
 Course URL: https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/
+They cover "open" exercises (code writing tasks) from units 5 to 9.
+
+In addition there are 2 optional tests: a PEP-8 style check by
+pycodestyle, and code lint by Pylint. To use them these modules
+should be installed on your machine. This can be done by running:
+pip install pycodestyle pylint
+
+**Usage:**
+A file named 'self.py' needs to be in same directory (as this file).
+You should write (copy) your implementation of course exercises to this
+file (self.py) and run one of the commands blow (from same directory).
+
+To test just a single exercise, use this command, replacing the suffix
+numbers with exercise's (e.g. for Ex 9.4.1 use suffix: test_ex_9_4_1)::
+
+    python test_self.py -v SelfPyTestCase.test_ex_5_3_4
+
+To run all tests, use::
+
+    python test_self.py -v
+
+Your python version should be 3.6+
+More information at: https://github.com/izmirli/self.py_tester/
 """
+
+__version__ = '1.0rc1'
+
+
 import unittest
 from unittest.mock import patch
 from io import StringIO
@@ -64,12 +92,6 @@ HANGMAN_ASCII_PHASE = [
 
 class SelfPyTestCase(unittest.TestCase):
     """Test self.py course exercises"""
-
-    # def test_ex_4_2_2(self):
-    #     self.assertIn('ex_4_2_2', dir(sp), 'Function to found')
-    #     cases = (('sun', 'NOT'), ('bob', 'OK'), ('Borrow or rob', 'OK'))
-    #     for case in cases:
-    #         self.assertEqual(sp.ex_4_2_2(case[0]), case[1])
 
     def test_ex_5_3_4(self):
         """Testing last_early function"""
@@ -294,7 +316,7 @@ class SelfPyTestCase(unittest.TestCase):
         for case in cases:
             self.assertEqual(sp.sequence_del(case[0]), case[1])
 
-    @unittest.skip('To test Ex 7.2.6, comment this line')
+    @unittest.skip('Disabled. Enable by commenting this line.')
     def test_ex_7_2_6(self):
         """Testing Ex 7.2.6"""
         if 'ex_7_2_6' not in dir(sp):
@@ -423,7 +445,7 @@ class SelfPyTestCase(unittest.TestCase):
         ])
         self.assertListEqual(sorted(sp.sort_anagrams(list_of_words)), expected)
 
-    @unittest.skip('To test Ex 8.3.2, comment this line')
+    @unittest.skip('Disabled. Enable by commenting this line.')
     def test_ex_8_3_2(self):
         """Testing Ex 8.3.2"""
         if 'ex_8_3_2' not in dir(sp):
@@ -507,7 +529,7 @@ class SelfPyTestCase(unittest.TestCase):
                                          os.path.abspath(case[1]))
             self.assertTrue(outcome == case[2], case[3])
 
-    @unittest.skip('To check Ex 9.2.1, comment this line.')
+    @unittest.skip('Disabled. Enable by commenting this line.')
     def test_ex_9_1_2(self):
         """Testing Ex 9.1.2"""
         if 'ex_9_1_2' not in dir(sp):
@@ -628,8 +650,7 @@ Where is the love?;The Black Eyed Peas;4:13;
                 sp.choose_word(source, case[0]), case[1], case[2]
             )
 
-    @unittest.skip('To check your Python code against PEP-8 '
-                   'style conventions, comment this line.')
+    @unittest.skip('Disabled. Enable pycodestyle by commenting this line.')
     def test_pycodestyle(self):
         """"Test that your code conform to PEP-8."""
         try:
@@ -649,8 +670,7 @@ Where is the love?;The Black Eyed Peas;4:13;
             f"Found {result.total_errors} code style errors (and warnings)."
         )
 
-    @unittest.skip('To check your Python code programming errors and more, '
-                   'comment this line.')
+    @unittest.skip('Disabled. Enable pylint by commenting this line.')
     def test_pylint(self):
         """"Lint your code to find programming errors and more."""
         try:
