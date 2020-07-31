@@ -5,10 +5,10 @@ Course URL: https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/
 import unittest
 from unittest.mock import patch
 from io import StringIO
-import sys
 import os
 import re
 from collections import deque
+# import sys
 
 import self as sp
 
@@ -562,8 +562,71 @@ yawa ylf dna sgniw ym daerps"""),
         with open(destination, 'r') as file_handle:
             destination_content = file_handle.readline().strip()
         os.unlink(destination)
-        self.assertIs(return_value, expected, 'Return value is not as expected.')
+        self.assertIs(return_value, expected,
+                      'Return value is not as expected.')
         self.assertEqual(destination_content, str(expected))
+
+    def test_ex_9_3_1(self):
+        """Testing my_mp3_playlist function"""
+        if 'my_mp3_playlist' not in dir(sp):
+            self.skipTest('Function my_mp3_playlist is missing')
+        source = os.path.abspath('f06.txt')
+        self.assertEqual(
+            sp.my_mp3_playlist(source),
+            ("Tudo Bom", 5, "The Black Eyed Peas")
+        )
+
+    def test_ex_9_3_2(self):
+        """Testing my_mp4_playlist function"""
+        if 'my_mp4_playlist' not in dir(sp):
+            self.skipTest('Function my_mp4_playlist is missing')
+        cases = (
+            (os.path.abspath('f06.txt'),
+             """Tudo Bom;Static and Ben El Tavori;5:13;
+I Gotta Feeling;The Black Eyed Peas;4:05;
+Python Love Story;Unknown;4:15;
+Paradise;Coldplay;4:23;
+Where is the love?;The Black Eyed Peas;4:13;""",
+             '5-lines file',
+             """Tudo Bom;Static and Ben El Tavori;5:13;
+I Gotta Feeling;The Black Eyed Peas;4:05;
+Instrumental;Unknown;4:15;
+Paradise;Coldplay;4:23;
+Where is the love?;The Black Eyed Peas;4:13;
+"""),
+            (os.path.abspath('f07.txt'),
+             'Always Look On The Bright Side Of Life;Monty Python;3:23;\n\n'
+             'Python Love Story',
+             '1-line file',
+             'Always Look On The Bright Side Of Life;Monty Python;3:23;\n'),
+        )
+        for case in cases:
+            with patch('sys.stdout', new=StringIO()) as fake_stdout:
+                sp.my_mp4_playlist(case[0], "Python Love Story")
+            to_stdout: str = fake_stdout.getvalue()
+            with open(case[0], 'r') as file_handle:
+                file_content = file_handle.read()
+            with open(case[0], 'w') as file_handle:
+                file_handle.write(case[3])
+            self.assertEqual(to_stdout.strip(), case[1], f'stdout {case[2]}')
+            self.assertEqual(file_content.strip(), case[1],
+                             f'content {case[2]}')
+
+    def test_ex_9_4_1(self):
+        """Testing choose_word function"""
+        if 'choose_word' not in dir(sp):
+            self.skipTest('Function choose_word is missing')
+        source = os.path.abspath('f01.txt')
+        cases = (
+            (1, (90, 'Beautiful'), 'first word'),
+            (3, (90, 'better'), 'word in middle of 1st line'),
+            (52, (90, 'explicitly'), 'word in middle of file'),
+            (220, (90, 'obvious'), 'wrap index'),
+        )
+        for case in cases:
+            self.assertTupleEqual(
+                sp.choose_word(source, case[0]), case[1], case[2]
+            )
 
     @unittest.skip('To check your Python code against PEP-8 '
                    'style conventions, comment this line.')
@@ -595,14 +658,15 @@ yawa ylf dna sgniw ym daerps"""),
         except ImportError as ex:
             self.skipTest(f'{ex}. Run "pip install pylint" to use this test.')
 
-        (pylint_out, pylint_err) = lint.py_run('self.py', return_std=True)
+        (pylint_out, _) = lint.py_run('self.py', return_std=True)
+
         output: str = pylint_out.getvalue()
         rating = ''
         messages = {}
         for line in output.split('\n'):
             # self.py:85: convention (C0116, missing-function-docstring,
             # ex_4_2_2) Missing function or method docstring
-            match = re.search(r'self\.py:(\d+): (\w+) \(([A-Z]\d+)\, (\S+)\, '
+            match = re.search(r'self\.py:(\d+): (\w+) \(([A-Z]\d+), (\S+), '
                               r'(\S+)?\) (\w.+)\s*$', line, re.IGNORECASE)
             if match:
                 (l_num, l_type, l_code, l_short_msg, l_func, l_long_msg) = \
@@ -621,7 +685,8 @@ yawa ylf dna sgniw ym daerps"""),
 
         # print(f'pylint_stdout:\n{output}\n')
         # first_messages = "\n".join([str(d) for d in messages.values()])
-        # print(f'\nrating: {rating}; msg types: {len(messages)}\n{first_messages}')
+        # print(f'\nrating: {rating}; msg types: {len(messages)}\n'
+        #       f'{first_messages}')
         if len(messages) >= 1:
             print(f'rating: {rating}/10\n\n'
                   f'Problems found (show first occurrence of each type):')
@@ -630,8 +695,8 @@ yawa ylf dna sgniw ym daerps"""),
                 print(f'[Line#{msg["line"]}{func}] '
                       f'[{msg["type"]}::{msg["code"]}] '
                       f'{msg["long_msg"]}')
-        self.assertGreaterEqual(
-            float(rating), 9.9, 'Your code\'s pylint rating is too low'
+        self.assertGreater(
+            float(rating), 9.85, 'Your code\'s pylint rating is too low'
         )
 
 
