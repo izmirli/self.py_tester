@@ -1,9 +1,9 @@
 # Automatic Tester for self.py Course Exercises
 
 ## Intro
-[Campus-IL's **self.py** course](https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/) is a free Python beginers massive open online course.
+[Campus-IL's **self.py** course](https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/) is a free Python beginners massive open online course.
 
-It has 10 units with a lot of exercises, many of them are Python code writing tasks. Except for the last exercise, the code writing exercises are not checked by anybody or anything. The students, espasialy as this is a beginers course, don't know if their code fulfilled the exercise requirements. They have no feedback, and might think they did OK even if they have bugs and/or did not implement what they should have.
+It has 10 units with a lot of exercises, many of them are Python code writing tasks. Except for the last exercise, the code writing exercises are not checked by anybody or anything. The students, especially as this is a beginners course, don't know if their code fulfilled the exercise requirements. They have no feedback, and might think they did OK even if they have bugs and/or did not implement what they should have.
 
 ## What this project does
 Using Python's [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework, automatic tests were writen for most of the code writing exercises (Units 5-9). These tests can be used to check student's exercise solution.
@@ -13,10 +13,10 @@ There is one main test file (**`test_self.py`**) and a few auxiliary files (that
 
 The student should:
 1. In the folder test_self.py is in, create a new file by the name: **`self.py`**
-1. Add the functions you were asked to implemnt (one or more) to **self.py** file (exact function names mast be used).
+1. Add the functions you were asked to implement (one or more) to **self.py** file (exact function names mast be used).
 1. In the command prompt (not Python interpreter/console) run this command:
-   * For all tests: `python -m unittest -v test_self.SelfPyTestCase`
-   * For a single test: `python -m unittest -v test_self.SelfPyTestCase.test_ex_x_y_z` (x, y, z for exercise x.y.z)
+   * For all tests: `python test_self.py -v`
+   * For a single test: `python test_self.py -v SelfPyTestCase.test_ex_x_y_z` (x, y, z for exercise x.y.z)
 
 ### Example
 For **exercise 5.3.7**, function name mast be **`chocolate_maker`**, so add your implementation of the function to **self.py** file:
