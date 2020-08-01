@@ -24,7 +24,7 @@ For **exercise 5.3.7**, function name mast be **`chocolate_maker`**, so add your
 def chocolate_maker(small, big, x):
     ...
 ```
-and run the test [only] for it by: `python -m unittest -v test_self.SelfPyTestCase.test_ex_5_3_7`
+and run its test with: `python test_self.py -v test_self.SelfPyTestCase.test_ex_5_3_7`
 
 If all is OK, this should be the output:
 ```

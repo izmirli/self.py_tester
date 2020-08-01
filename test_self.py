@@ -27,7 +27,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.0rc1'
+__version__ = '1.0rc1.post1'
 
 
 import unittest
@@ -104,7 +104,8 @@ class SelfPyTestCase(unittest.TestCase):
             ("X", False),
         )
         for case in cases:
-            self.assertEqual(sp.last_early(case[0]), case[1])
+            self.assertEqual(sp.last_early(case[0]), case[1],
+                             f'Failed on "{case[0]}"')
 
     def test_ex_5_3_5(self):
         """Testing distance function"""
