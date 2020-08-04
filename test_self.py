@@ -27,7 +27,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.0rc1.post1'
+__version__ = '1.0rc1.post2'
 
 
 import unittest
@@ -323,22 +323,22 @@ class SelfPyTestCase(unittest.TestCase):
         if 'ex_7_2_6' not in dir(sp):
             self.skipTest('Function ex_7_2_6 is missing')
         in_out_pairs = (
-            ([1], 'Milk,Cottage,Tomatoes'),  # print list
-            ([2], '3'),  # print list length
-            ([3, 'Cottage'], 'True'),  # is given product in list
-            ([3, 'Beer'], 'False'),
-            ([4, 'Cottage'], '1'),  # count given product in list
-            ([5, 'Cottage'], None),  # remove given product from list
-            ([6, '7UP'], None),  # add given product to list
-            ([6, '7UP'], None),
-            ([4, '7UP'], '2'),
-            ([6, 'GU'], None),
-            ([7], '7UP,7UP,GU'),  # print all illegal products
-            ([6, 'Milk'], None),
-            ([1], 'Milk,Tomatoes,7UP,7UP,GU,Milk'),
-            ([8], None),  # remove duplicates from list
-            ([1], ['Milk', 'Tomatoes', '7UP', 'GU']),
-            ([9], None),  # Exit
+            (['1'], 'Milk,Cottage,Tomatoes'),  # print list
+            (['2'], '3'),  # print list length
+            (['3', 'Cottage'], 'True'),  # is given product in list
+            (['3', 'Beer'], 'False'),
+            (['4', 'Cottage'], '1'),  # count given product in list
+            (['5', 'Cottage'], None),  # remove given product from list
+            (['6', '7UP'], None),  # add given product to list
+            (['6', '7UP'], None),
+            (['4', '7UP'], '2'),
+            (['6', 'GU'], None),
+            (['7'], '7UP,7UP,GU'),  # print all illegal products
+            (['6', 'Milk'], None),
+            (['1'], 'Milk,Tomatoes,7UP,7UP,GU,Milk'),
+            (['8'], None),  # remove duplicates from list
+            (['1'], ['Milk', 'Tomatoes', '7UP', 'GU']),
+            (['9'], None),  # Exit
         )
         mock_inputs = [item for in_list in in_out_pairs for item in in_list[0]]
         mock_inputs.insert(0, "Milk,Cottage,Tomatoes")
@@ -350,16 +350,25 @@ class SelfPyTestCase(unittest.TestCase):
         to_stdout: str = fake_stdout.getvalue()
         # print(f'\nstdout:\n{to_stdout}', file=sys.stderr)
         output = deque(to_stdout.split('\n'))
+        action_count = -1
         for expected_line in expected_out:
+            action_count += 1
             if expected_line is None:
                 continue
             output_line = output.popleft().strip()
             if isinstance(expected_line, list):
                 output_to_list = output_line.split(',')
-                self.assertListEqual(sorted(output_to_list),
-                                     sorted(expected_line))
+                self.assertListEqual(
+                    sorted(output_to_list), sorted(expected_line),
+                    f'Action#{in_out_pairs[action_count][0][0]} '
+                    f'(Test#{action_count}).'
+                )
             else:
-                self.assertEqual(output_line, expected_line)
+                self.assertEqual(
+                    output_line, expected_line,
+                    f'Action#{in_out_pairs[action_count][0][0]}; '
+                    f'(Test#{action_count}).'
+                )
 
     def test_ex_7_2_7(self):
         """Testing arrow function"""
