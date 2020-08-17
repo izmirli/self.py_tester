@@ -1,11 +1,11 @@
 """Automatic tests for self.py course exercises.
 
-These are 35 unit tests for for exercises from self.py course.
+These are 35 unit tests for exercises from self.py course.
 Course URL: https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/
-They cover "open" exercises (code writing tasks) from units 5 to 9.
+They cover most "open" exercises (code writing tasks) from units 5 to 9.
 
 In addition there are 2 optional tests: a PEP-8 style check by
-pycodestyle, and code lint by Pylint. To use them these modules
+pycodestyle, and code lint by Pylint. To use them, these modules
 should be installed on your machine. This can be done by running:
 pip install pycodestyle pylint
 
@@ -27,7 +27,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.0rc1.post2'
+__version__ = '1.0'
 
 
 import unittest
@@ -124,7 +124,7 @@ class SelfPyTestCase(unittest.TestCase):
         if 'filter_teens' not in dir(sp):
             self.skipTest('Function filter_teens is missing')
         cases = (
-            ([], 0, 'no args, default ages'),
+            ([], 0, 'no args, default arguments should be used'),
             ([20], 20, 'one grownup, missing 2 args - default teen ages'),
             ([1, 2, 3], 6, 'all my children < 13'),
             ([2, 13, 1], 3, '2 kids, one teen'),
@@ -709,7 +709,7 @@ Where is the love?;The Black Eyed Peas;4:13;
                     }
                     continue
 
-            match = re.search(r'Your code .* (\d(?:\.\d+)?)/10', line)
+            match = re.search(r'Your code .* (1?\d(?:\.\d+)?)/10', line)
             if match:
                 rating = match.group(1)
 
