@@ -27,7 +27,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.0'
+__version__ = '1.0.1'
 
 
 import unittest
@@ -467,13 +467,13 @@ class SelfPyTestCase(unittest.TestCase):
             'hobbies': ['Sing', 'Compose', 'Act'],
         }
         cases = (
-            (1, 'Carey', None),
-            (2, 'March', None),
-            (3, '3', None),
-            (4, 'Act', None),
-            (5, '', ('hobbies', 3, 'Cooking')),
-            (6, '(27, 3, 1970)', None),
-            (7, '50', ('age', None, '50')),
+            ('1', 'Carey', None, 'Last name'),
+            ('2', ('march', 'mar', '3', '03'), None, 'Month of birth'),
+            ('3', '3', None, 'Number of hobbies'),
+            ('4', 'Act', None, 'Last hobby'),
+            ('5', '', ('hobbies', 3, 'Cooking'), 'Add Cooking as a new hobby'),
+            ('6', '(27, 3, 1970)', None, 'Birth date tuple'),
+            ('7', '50', ('age', None, '50'), 'Add age'),
         )
         for case in cases:
             mock_inputs = [case[0]]
@@ -482,8 +482,12 @@ class SelfPyTestCase(unittest.TestCase):
                     sp.ex_8_3_2(person)
             to_stdout: str = fake_stdout.getvalue()
             found = to_stdout.strip()
-            if case[1] != '':
-                self.assertEqual(found.casefold(), case[1].casefold())
+            if isinstance(case[1], tuple):
+                self.assertIn(found.casefold(), case[1],
+                              f'Action#{case[0]} {case[3]}')
+            elif case[1] != '':
+                self.assertEqual(found.casefold(), case[1].casefold(),
+                                 f'Action#{case[0]} {case[3]}')
 
             if case[2] is not None:
                 dict_check: tuple = case[2]
@@ -491,7 +495,8 @@ class SelfPyTestCase(unittest.TestCase):
                 if dict_check[1] is not None:
                     found = found[dict_check[1]]
                 expected: str = dict_check[2]
-                self.assertEqual(str(found).casefold(), expected.casefold())
+                self.assertEqual(str(found).casefold(), expected.casefold(),
+                                 f'Action#{case[0]} {case[3]}')
 
     def test_ex_8_3_3(self):
         """Testing count_chars function"""
