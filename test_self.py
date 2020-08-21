@@ -27,7 +27,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 
 import unittest
@@ -510,9 +510,14 @@ class SelfPyTestCase(unittest.TestCase):
         """Testing inverse_dict function"""
         if 'inverse_dict' not in dir(sp):
             self.skipTest('Function inverse_dict is missing')
-        course_dict = {'I': 3, 'love': 3, 'self.py!': 2}
-        expected = {3: ['I', 'love'], 2: ['self.py!']}
-        self.assertDictEqual(sp.inverse_dict(course_dict), expected)
+        cases = (
+            ({'I': 3, 'love': 3, 'self.py!': 2},
+             {3: ['I', 'love'], 2: ['self.py!']}, 'Course example'),
+            ({'k5': 'v3', 'k1': 'v1', 'k2': 'v3', 'k3': 'v3', 'k4': 'v3'},
+             {'v3': ['k2', 'k3', 'k4', 'k5'], 'v1': ['k1']}, 'sorting'),
+        )
+        for case in cases:
+            self.assertDictEqual(sp.inverse_dict(case[0]), case[1], case[2])
 
     def test_ex_8_4_1(self):
         """Testing print_hangman function"""
