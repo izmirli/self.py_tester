@@ -9,6 +9,7 @@ It has 10 units with a lot of exercises, many of them are Python code writing ta
 Using Python's [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework, automatic tests were writen for most of the code writing exercises (Units 5-9). These tests can be used to check student's exercise solution.
 
 ## How to use
+[[More information can be found in Wiki](https://github.com/izmirli/self.py_tester/wiki/Usage)]  
 There is one main test file (**`test_self.py`**) and a few auxiliary files (that are used by some tests). All files should be in the same folder.
 
 The student should:
