@@ -27,7 +27,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 
 import unittest
@@ -552,15 +552,17 @@ class SelfPyTestCase(unittest.TestCase):
 
         words_file = os.path.abspath('f04.txt')
         cases = (
-            (['sort'], "['about', 'and', 'away', 'believe', 'can', 'day', "
-                       "'every', 'fly', 'i', 'it', 'my', 'night', 'sky', "
-                       "'spread', 'the', 'think', 'touch', 'wings']"),
+            (['sort'],
+             "['about', 'and', 'away', 'believe', 'can', 'day', "
+             "'every', 'fly', 'i', 'it', 'my', 'night', 'sky', "
+             "'spread', 'the', 'think', 'touch', 'wings']",
+             'checking sort'),
             (['rev'], """ylf nac i eveileb i
 yks eht hcuot nac i eveileb i
 yad dna thgin yreve ti tuoba kniht i
-yawa ylf dna sgniw ym daerps"""),
+yawa ylf dna sgniw ym daerps""", 'checking rev'),
             (['last', 2], 'i think about it every night and day\n'
-                          'spread my wings and fly away'),
+                          'spread my wings and fly away', 'checking last'),
         )
         for case in cases:
             mock_inputs = [words_file, *case[0]]
@@ -569,7 +571,7 @@ yawa ylf dna sgniw ym daerps"""),
                     sp.ex_9_1_2()
             to_stdout: str = fake_stdout.getvalue()
             found = to_stdout.strip()
-            self.assertEqual(found, case[1])
+            self.assertEqual(found, case[1], case[2])
 
     def test_ex_9_2_2(self):
         """Testing copy_file_content function"""
