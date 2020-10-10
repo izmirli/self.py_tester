@@ -1,4 +1,4 @@
-name: Pylint
+name: Pylint and pycodestyle
 
 on: [push]
 
