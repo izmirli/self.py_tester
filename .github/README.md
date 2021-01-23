@@ -2,6 +2,8 @@
 
 ![Pylint and pycodestyle](https://github.com/izmirli/self.py_tester/workflows/Pylint%20and%20pycodestyle/badge.svg)
 
+[וידאו הסבר בעברית](https://youtu.be/pzhG9yFcaGg)
+
 ## Intro
 [Campus-IL's **self.py** course](https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/) is a free Python beginners massive open online course.
 
