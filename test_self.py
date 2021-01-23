@@ -150,9 +150,11 @@ class SelfPyTestCase(unittest.TestCase):
             ([10, 0, 10], True),
         )
         for case in cases:
-            self.assertEqual(sp.chocolate_maker(*case[0]), case[1],
-                             f'Failed on: small={case[0][0]}, big={case[0][1]}, '
-                             f'x={case[0][2]}')
+            self.assertEqual(
+                sp.chocolate_maker(*case[0]), case[1],
+                f'Failed on: small={case[0][0]}, big={case[0][1]}, '
+                f'x={case[0][2]}'
+            )
 
     def test_ex_5_4_1(self):
         """Testing func function for its docstring"""
