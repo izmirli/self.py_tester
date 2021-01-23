@@ -27,7 +27,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.0.2'
+__version__ = '1.1.0'
 
 
 import unittest
@@ -117,7 +117,11 @@ class SelfPyTestCase(unittest.TestCase):
             ([1, 2, 3], False),
         )
         for case in cases:
-            self.assertEqual(sp.distance(*case[0]), case[1])
+            self.assertEqual(
+                sp.distance(*case[0]), case[1],
+                f'Failed on: num1={case[0][0]}, '
+                f'num2={case[0][1]}, num3={case[0][2]}'
+            )
 
     def test_ex_5_3_6(self):
         """Testing filter_teens function"""
@@ -125,10 +129,10 @@ class SelfPyTestCase(unittest.TestCase):
             self.skipTest('Function filter_teens is missing')
         cases = (
             ([], 0, 'no args, default arguments should be used'),
-            ([20], 20, 'one grownup, missing 2 args - default teen ages'),
-            ([1, 2, 3], 6, 'all my children < 13'),
-            ([2, 13, 1], 3, '2 kids, one teen'),
-            ([2, 1, 15], 18, '2 kids, one special teen'),
+            ([20], 20, 'one grownup (20), missing 2 args - default teen ages'),
+            ([1, 2, 3], 6, 'all my children < 13 (1, 2, 3)'),
+            ([2, 13, 1], 3, '2 kids, one teen (2, 13, 1)'),
+            ([2, 1, 15], 18, '2 kids, one special teen (2, 1, 15)'),
         )
         for case in cases:
             self.assertEqual(sp.filter_teens(*case[0]), case[1], case[2])
@@ -146,7 +150,28 @@ class SelfPyTestCase(unittest.TestCase):
             ([10, 0, 10], True),
         )
         for case in cases:
-            self.assertEqual(sp.chocolate_maker(*case[0]), case[1])
+            self.assertEqual(
+                sp.chocolate_maker(*case[0]), case[1],
+                f'Failed on: small={case[0][0]}, big={case[0][1]}, '
+                f'x={case[0][2]}'
+            )
+
+    def test_ex_5_4_1(self):
+        """Testing func function for its docstring"""
+        if 'func' not in dir(sp):
+            self.skipTest('Function func is missing')
+        with patch('sys.stdout', new=StringIO()) as fake_stdout:
+            help(sp.func)
+            output = fake_stdout.getvalue()
+        # print(f'output:\n{output}\n---', sys.stderr)
+        self.assertRegex(output, r'func\(num1, num2\)\n[ \t]+\w+[^\n]{7}',
+                         'no func description (at least 8 characters)')
+        self.assertRegex(output, r':param num1:[ \t]+\w+', 'num1 description')
+        self.assertRegex(output, r':param num2:[ \t]+\w+', 'num2 description')
+        self.assertRegex(output, r':type num1:[ \t]+\w+\n', 'no num1 type')
+        self.assertRegex(output, r':type num2:[ \t]+\w+\n', 'no num2 type')
+        self.assertRegex(output, r':return:[ \t]+\w+', 'no return description')
+        self.assertRegex(output, r':rtype:[ \t]+\w+\n', 'no return type')
 
     def test_ex_5_5_1(self):
         """Testing is_valid_input function"""
@@ -159,7 +184,7 @@ class SelfPyTestCase(unittest.TestCase):
             ('ab', False, '"ab" is invalid'),
             ('app$', False, '"app$" is invalid'),
             ('', False, '"" (empty string) is invalid'),
-            ('א', False, 'א is invalid'),
+            ('א', False, 'א (Hebrew Alef) is invalid'),
         )
         for case in cases:
             self.assertEqual(sp.is_valid_input(case[0]), case[1], case[2])
