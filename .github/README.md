@@ -1,5 +1,7 @@
 # Automatic Tester for self.py Course Exercises
 
+![CodeQL security analysis](https://github.com/izmirli/self.py_tester/workflows/CodeQL/badge.svg)
+![OSSAR analysis](https://github.com/izmirli/self.py_tester/workflows/OSSAR/badge.svg)
 ![Pylint and pycodestyle](https://github.com/izmirli/self.py_tester/workflows/Pylint%20and%20pycodestyle/badge.svg)
 
 [וידאו הסבר בעברית](https://youtu.be/pzhG9yFcaGg)
