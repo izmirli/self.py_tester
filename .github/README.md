@@ -7,7 +7,7 @@
 ## Intro
 [Campus-IL's **self.py** course](https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/) is a free Python beginners massive open online course.
 
-It has 10 units with a lot of exercises, many of them are Python code writing tasks. Except for the last exercise, the code writing exercises are not checked by anybody or anything. The students, especially as this is a beginners course, don't know if their code fulfilled the exercise requirements. They have no feedback, and might think they did OK even if they have bugs and/or did not implement what they should have.
+It has a lot of exercises, many of them are Python code writing tasks. These code writing exercises are not checked by anybody or anything (Except the last, and only for paid upgrade). The students, especially as this is a beginners course, don't know if their code fulfilled the exercise requirements. They have no feedback, and might think they did OK even if they have bugs and/or did not implement what they should have.
 
 ## What this project does
 Using Python's [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework, automatic tests were writen for most of the code writing exercises (Units 5-9). These tests can be used to check student's exercise solution.
@@ -20,7 +20,7 @@ The student should:
 1. In the folder test_self.py is in, create a new file by the name: **`self.py`**
 1. Add the functions you were asked to implement (one or more) to **self.py** file (exact function names mast be used).
 1. In the command prompt (not Python interpreter/console) run this command:
-   * For all tests: `python test_self.py -v`
+   * For all tests: `python test_self.py`
    * For a single test: `python test_self.py -v SelfPyTestCase.test_ex_x_y_z` (x, y, z for exercise x.y.z)
 
 ### Example
@@ -43,6 +43,6 @@ OK
 ```
 
 ## Disclaimer
-This content is not affiliated with, endorsed, sponsored, or specifically approved by National Cyber Directorate, [Cyber education center](https://cyber.org.il/) and Campus-IL (or anybody else related to self.py course), and they are not responsible for it.
+This content is not affiliated with, endorsed, sponsored, or specifically approved by National Cyber Directorate, Cyber education center and Campus-IL (or anyone else related to self.py course), and they are not responsible for it.
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

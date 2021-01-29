@@ -198,7 +198,8 @@ class SelfPyTestCase(unittest.TestCase):
             (['monkey', 2.0, 1], [2.0, 1, 'monkey']),
         )
         for case in cases:
-            self.assertEqual(sp.shift_left(case[0]), case[1])
+            self.assertEqual(sp.shift_left(case[0]), case[1],
+                             f'original list: {case[0]}')
 
     def test_ex_6_2_3(self):
         """Testing format_list function"""
@@ -210,7 +211,8 @@ class SelfPyTestCase(unittest.TestCase):
             (["hydrogen", "helium"], 'hydrogen and helium'),
         )
         for case in cases:
-            self.assertEqual(sp.format_list(case[0]), case[1])
+            self.assertEqual(sp.format_list(case[0]), case[1],
+                             f'original list: {case[0]}')
 
     def test_ex_6_2_4(self):
         """Testing extend_list_x function"""
@@ -218,9 +220,17 @@ class SelfPyTestCase(unittest.TestCase):
             self.skipTest('Function extend_list_x is missing')
         cases = (
             ([[4, 5, 6], [1, 2, 3]], [1, 2, 3, 4, 5, 6]),
+            ([[2], [1]], [1, 2]),
+            ([['one', 1], [1, 'one']], [1, 'one', 'one', 1]),
+            ([[7, 7, 7, 7, 7, 7, 7], [0, 1, 2, 3, 4]],
+             [0, 1, 2, 3, 4, 7, 7, 7, 7, 7, 7, 7]),
         )
         for case in cases:
-            self.assertEqual(sp.extend_list_x(*case[0]), case[1])
+            self.assertEqual(
+                sp.extend_list_x(case[0][0].copy(), case[0][1].copy()),
+                case[1],
+                f'original lists: {case[0]}'
+            )
 
     def test_ex_6_3_1(self):
         """Testing are_lists_equal function"""
@@ -229,8 +239,10 @@ class SelfPyTestCase(unittest.TestCase):
         list1 = [0.6, 1, 2, 3]
         list2 = [3, 2, 0.6, 1]
         list3 = [9, 0, 5, 10.5]
-        self.assertEqual(sp.are_lists_equal(list1, list2), True)
-        self.assertEqual(sp.are_lists_equal(list1, list3), False)
+        self.assertEqual(sp.are_lists_equal(list1, list2), True,
+                         f'list1={list1}, list2={list2} should be equal')
+        self.assertEqual(sp.are_lists_equal(list1, list3), False,
+                         f'list1={list1}, list2={list3} should NOT be equal')
 
     def test_ex_6_3_2(self):
         """Testing longest function"""
@@ -242,7 +254,8 @@ class SelfPyTestCase(unittest.TestCase):
              "Williams"),
         )
         for case in cases:
-            self.assertEqual(sp.longest(case[0]), case[1])
+            self.assertEqual(sp.longest(case[0]), case[1],
+                             f'list was: {case[0]}')
 
     def test_ex_6_4_1(self):
         """Testing check_valid_input function"""
