@@ -27,7 +27,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.1.0'
+__version__ = '1.1.2'
 
 
 import unittest
@@ -305,7 +305,8 @@ class SelfPyTestCase(unittest.TestCase):
             (-3, 3, [9, 4, 1, 0, 1, 4, 9]),
         )
         for case in cases:
-            self.assertEqual(sp.squared_numbers(case[0], case[1]), case[2])
+            self.assertEqual(sp.squared_numbers(case[0], case[1]), case[2],
+                             f'start={case[0]}, stop={case[1]}')
 
     def test_ex_7_2_1(self):
         """Testing is_greater function"""
@@ -318,7 +319,8 @@ class SelfPyTestCase(unittest.TestCase):
             ([base_list, 60], [], 'return empty'),
         )
         for case in cases:
-            self.assertEqual(sorted(sp.is_greater(*case[0])), sorted(case[1]))
+            self.assertEqual(sorted(sp.is_greater(*case[0])), sorted(case[1]),
+                             f'list={base_list}, n={case[0][1]}')
 
     def test_ex_7_2_2(self):
         """Testing numbers_letters_count function"""
@@ -418,7 +420,8 @@ class SelfPyTestCase(unittest.TestCase):
             (['*', 5], '*\n**\n***\n****\n*****\n****\n***\n**\n*\n'),
         )
         for case in cases:
-            self.assertEqual(sp.arrow(*case[0]), case[1])
+            self.assertEqual(sp.arrow(*case[0]), case[1],
+                             f'char={case[0][0]}, len={case[0][1]}')
 
     def test_ex_7_3_1(self):
         """Testing show_hidden_word function"""
@@ -431,7 +434,8 @@ class SelfPyTestCase(unittest.TestCase):
             (["banana", ['a', 'b', 'c', 'n']], 'b a n a n a'),
         )
         for case in cases:
-            self.assertEqual(sp.show_hidden_word(*case[0]), case[1])
+            self.assertEqual(sp.show_hidden_word(*case[0]), case[1],
+                             f'word={case[0][0]}, old_letters={case[0][1]}')
 
     def test_ex_7_3_2(self):
         """Testing check_win function"""
@@ -444,7 +448,8 @@ class SelfPyTestCase(unittest.TestCase):
             (["banana", ['a', 'b', 'c', 'n']], True),
         )
         for case in cases:
-            self.assertEqual(sp.check_win(*case[0]), case[1])
+            self.assertEqual(sp.check_win(*case[0]), case[1],
+                             f'word={case[0][0]}, old_letters={case[0][1]}')
 
     def test_ex_8_2_2(self):
         """Testing sort_prices function"""
