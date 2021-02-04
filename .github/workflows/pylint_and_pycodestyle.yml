@@ -1,6 +1,11 @@
 name: Pylint and pycodestyle
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ master ]
 
 jobs:
   build:
@@ -23,4 +28,4 @@ jobs:
         pycodestyle `ls -R|grep .py$|xargs`
     - name: Analysing the code with pylint
       run: |
-        pylint -d import-error,import-outside-toplevel,too-many-locals,too-many-public-methods `ls -R|grep .py$|xargs`
+        pylint -d import-error,import-outside-toplevel,too-many-locals,too-many-public-methods,too-few-public-methods `ls -R|grep .py$|xargs`
