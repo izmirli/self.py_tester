@@ -84,13 +84,13 @@ HANGMAN_ASCII_PHASE = [
 ]
 
 # handle colors conditionally
-color_flag = False
 try:
     import colorama
-    color_flag = True
     colorama.init()
 except ImportError:
-    pass
+    COLOR_FLAG = False
+else:
+    COLOR_FLAG = True
 
 
 def style_me(text: str, style: str = 'white') -> str:
@@ -101,7 +101,7 @@ def style_me(text: str, style: str = 'white') -> str:
     :param style: success/fail/warn/emphasize/illuminate or white (default).
     :return: the styled text with ANSI escape character sequences.
     """
-    if not color_flag:
+    if not COLOR_FLAG:
         return text
 
     styled = '\033[1m'  # make it bold
@@ -127,20 +127,20 @@ def get_test_display_name(test: unittest.case.TestCase) -> str:
     :param test: the TestCase object to retreive the info from.
     :return: display name string.
     """
-    ex_name = test.id()
-    m = re.search(r'test_(?:ex_(\d)_(\d)_(\d)|(\w+))\s*$', ex_name)
-    if m and m.group(1) is not None:
-        ex_name = f'Exercise {m.group(1)}.{m.group(2)}.{m.group(3)}'
-    elif m and m.group(4) is not None:
-        ex_name = m.group(4)
+    t_name = test.id()
+    match = re.search(r'test_(?:ex_(\d)_(\d)_(\d)|(\w+))\s*$', t_name)
+    if match and match.group(1) is not None:
+        t_name = f'Exercise {match.group(1)}.{match.group(2)}.{match.group(3)}'
+    elif match and match.group(4) is not None:
+        t_name = match.group(4)
     description = test.shortDescription()
-    m = re.search(r'Testing (\w+) function', description, re.IGNORECASE)
-    if m:
-        ex_name += f' ({m.group(1)})'
+    match = re.search(r'Testing (\w+) function', description, re.IGNORECASE)
+    if match:
+        t_name += f' ({match.group(1)})'
     elif not re.search(r'Testing Ex \d\.\d\.\d', description):
-        ex_name += f' ({description[:-1]})'
+        t_name += f' ({description[:-1]})'
 
-    return ex_name
+    return t_name
 
 
 class CustomTestResult(unittest.runner.TextTestResult):
@@ -191,7 +191,7 @@ class CustomTestResult(unittest.runner.TextTestResult):
 
     def printErrors(self) -> None:
         """Abort errors/fails printout."""
-        pass
+        return
 
 
 class CustomTestRunner(unittest.TextTestRunner):
