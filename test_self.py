@@ -1,42 +1,36 @@
 """Automatic tests for self.py course exercises.
 
-These are 35 unit tests for exercises from self.py course.
+These are 36 unit tests for exercises from self.py course.
 Course URL: https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/
 They cover most "open" exercises (code writing tasks) from units 5 to 9.
 
-In addition there are 2 optional tests: a PEP-8 style check by
-pycodestyle, and code lint by Pylint. To use them, these modules
-should be installed on your machine. This can be done by running:
-pip install pycodestyle pylint
+In addition there are 2 optional linter tests: style check (PEP-8) and
+logical code checks. To use them, their linter modules should be
+installed on your machine. This can be done by running::
+
+    python -m pip install colorama pycodestyle pylint
 
 **Usage:**
-A file named 'self.py' needs to be in same directory (as this file).
-You should write (copy) your implementation of course exercises to this
+Create a new file named 'self.py' in same directory (as this file).
+Write/copy your implementation of course exercises functions to this
 file (self.py) and run one of the commands blow (from same directory).
 
-To test just a single exercise, use this command, replacing the suffix
-numbers with exercise's (e.g. for Ex 9.4.1 use suffix: test_ex_9_4_1)::
+To run tests use::
 
-    python test_self.py -v SelfPyTestCase.test_ex_5_3_4
-
-To run all tests, use::
-
-    python test_self.py -v
+    python test_self.py
 
 Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '1.1.2'
-
+__version__ = '2.0'
 
 import unittest
 from unittest.mock import patch
 from io import StringIO
 import os
 import re
-from collections import deque
-# import sys
+from collections import deque, defaultdict
 
 import self as sp
 
@@ -89,9 +83,217 @@ HANGMAN_ASCII_PHASE = [
     |""",
 ]
 
+# handle colors conditionally
+color_flag = False
+try:
+    import colorama
+    color_flag = True
+    colorama.init()
+except ImportError:
+    pass
+
+
+def style_me(text: str, style: str = 'white') -> str:
+    """Add color and style to given text with ANSI escape character sequences.
+    If colorama module isn't loaded, return given text as is.
+
+    :param text: the text to be colored/styled.
+    :param style: success/fail/warn/emphasize/illuminate or white (default).
+    :return: the styled text with ANSI escape character sequences.
+    """
+    if not color_flag:
+        return text
+
+    styled = '\033[1m'  # make it bold
+    if style == 'success':
+        styled += colorama.Fore.LIGHTGREEN_EX
+    elif style == 'fail':
+        styled += colorama.Fore.RED
+    elif style == 'warn':
+        styled += colorama.Fore.LIGHTMAGENTA_EX
+    elif style == 'emphasize':
+        styled += colorama.Fore.LIGHTCYAN_EX
+    elif style == 'illuminate':
+        styled += colorama.Fore.LIGHTYELLOW_EX
+    else:
+        styled += colorama.Fore.WHITE
+
+    return styled + text + colorama.Style.RESET_ALL
+
+
+def get_test_display_name(test: unittest.case.TestCase) -> str:
+    """Extract, process and return display name from test.
+
+    :param test: the TestCase object to retreive the info from.
+    :return: display name string.
+    """
+    ex_name = test.id()
+    m = re.search(r'test_(?:ex_(\d)_(\d)_(\d)|(\w+))\s*$', ex_name)
+    if m and m.group(1) is not None:
+        ex_name = f'Exercise {m.group(1)}.{m.group(2)}.{m.group(3)}'
+    elif m and m.group(4) is not None:
+        ex_name = m.group(4)
+    description = test.shortDescription()
+    m = re.search(r'Testing (\w+) function', description, re.IGNORECASE)
+    if m:
+        ex_name += f' ({m.group(1)})'
+    elif not re.search(r'Testing Ex \d\.\d\.\d', description):
+        ex_name += f' ({description[:-1]})'
+
+    return ex_name
+
+
+class CustomTestResult(unittest.runner.TextTestResult):
+    """Override default TextTestResult to add printout & count outcomes."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.custom_count = defaultdict(int)
+        self.missing_exercises = []
+
+    def addSuccess(self, test: unittest.case.TestCase) -> None:
+        ex_display = get_test_display_name(test)
+        print(f'{ex_display}: ' + style_me('OK', 'success'))
+        self.custom_count["success"] += 1
+        super().addSuccess(test)
+
+    def addFailure(self, test: unittest.case.TestCase, err) -> None:
+        ex_display = get_test_display_name(test)
+        self.custom_count["problems"] += 1
+        # exception_type, exception_value, exception_tb = err
+        exception_value = err[1]
+        print(f'{style_me(ex_display)}: {style_me("FAIL", "fail")}')
+        print(style_me('---\n' + str(exception_value) + '\n---', "fail"))
+        super().addFailure(test, err)
+
+    def addError(self, test: unittest.case.TestCase, err) -> None:
+        ex_display = get_test_display_name(test)
+        self.custom_count["problems"] += 1
+        # exception_type, exception_value, exception_tb = err
+        exception_value = err[1]
+        print(f'{style_me(ex_display)}: {style_me("ERROR", "fail")}')
+        print(style_me('---\n' + str(exception_value) + '\n---', "fail"))
+        super().addError(test, err)
+
+    def addSkip(self, test: unittest.case.TestCase, reason: str) -> None:
+        ex_display = get_test_display_name(test)
+        if re.search(r'Disabled', reason, re.IGNORECASE):
+            pass
+            # print(f'{ex_display}: Disabled (advanced users can read '
+            #       f'documentaion to enable)')
+        elif re.search(r'Function .+ missing', reason, re.IGNORECASE):
+            self.custom_count["missing"] += 1
+            self.missing_exercises.append(ex_display[9:])
+        else:
+            print(f'{ex_display}: {style_me(reason, "warn")}')
+
+        super().addSkip(test, reason)
+
+    def printErrors(self) -> None:
+        """Abort errors/fails printout."""
+        pass
+
+
+class CustomTestRunner(unittest.TextTestRunner):
+    """Override default TextTestRunner result class & run method for
+    custom display.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(resultclass=CustomTestResult, verbosity=0,
+                         *args, **kwargs)
+
+    def run(self, test) -> unittest.result.TestResult:
+        result = super().run(test)
+
+        if result.custom_count["problems"] > 0:
+            print(style_me(
+                f'{result.custom_count["problems"]:2} exercises have problems',
+                'fail'
+            ))
+
+        print(style_me(
+            f'{result.custom_count["success"]:2} exercises done successfully',
+            'success' if result.custom_count["success"] > 0 else 'white'
+        ))
+
+        if result.custom_count["missing"] > 0:
+            print(style_me(
+                f'{result.custom_count["missing"]:2} exercises left to do',
+                'emphasize'
+            ))
+            print('\tNext exercises:', ', '.join(result.missing_exercises[:3]))
+
+        if result.custom_count["problems"] == 0 \
+                and result.custom_count["missing"] == 0:
+            print('\n' + style_me(f'{"Grate Job!":^60}', 'emphasize'))
+            if result.custom_count["success"] >= 36:
+                positive_reinforcement = \
+                    "You are an advanced programmer going above and beyond"
+                print(style_me(
+                    f'{positive_reinforcement:^60}', 'illuminate'
+                ))
+            elif result.custom_count["success"] > 33:
+                print(style_me(
+                    f'{"You did more and I like it!":^60}', 'illuminate'
+                ))
+            if result.custom_count["success"] >= 38:
+                positive_reinforcement = \
+                    '>'*10 + " You have mastered self.py exercises " + '<'*10
+                print(style_me(f'{positive_reinforcement:^60}', 'warn'))
+
+        return result
+
 
 class SelfPyTestCase(unittest.TestCase):
     """Test self.py course exercises"""
+
+    # def tearDown(self) -> None:
+    #     """Custom output after each test case."""
+    #     if not hasattr(self, '_outcome'):
+    #         # abort unless have vital attribute: _outcome
+    #         return
+    #
+    #     # handle results.
+    #     results = self.defaultTestResult()
+    #     self._feedErrorsToResult(results, self._outcome.errors)
+    #
+    #     # normalize test name/description to printout.
+    #     ex_name = self.id()
+    #     m = re.search(r'test_(?:ex_(\d)_(\d)_(\d)|(\w+))\s*$', ex_name)
+    #     if m and m.group(1) is not None:
+    #         ex_name = f'Exercise {m.group(1)}.{m.group(2)}.{m.group(3)}'
+    #         results.custom_count["total"] += 1
+    #     elif m and m.group(4) is not None:
+    #         ex_name = m.group(4)
+    #     description = self.shortDescription()
+    #     m = re.search(r'Testing (\w+) function', description, re.IGNORECASE)
+    #     if m:
+    #         description = m.group(1)
+    #
+    #     # if ex_name == 'Exercise 9.4.1' or ex_name == 'Exercise 9.3.1':
+    #     #     print(f'_outcome vars: ')
+    #     #     pprint(vars(self._outcome))
+    #
+    #     if self._outcome.skipped:
+    #         skip_msg = self._outcome.skipped[0][1]
+    #         if not re.search(r'Function.+missing', skip_msg, re.IGNORECASE):
+    #             print(f'{ex_name} ({description}): {skip_msg}')
+    #         return
+    #     elif results.wasSuccessful():
+    #         print(f'{ex_name} ({description}): OK')
+    #         results.custom_count["success"] += 1
+    #     else:
+    #         results.custom_count["problems"] += 1
+    #         alert =
+    #             results.errors if len(results.errors) else results.failures
+    #         alert = alert[-1][1]
+    #         alert_msg = '\n'.join([
+    #             x for x in alert.split('\n')[1:] if not x.startswith(' ')
+    #         ])
+    #         print(f'{ex_name} ({description}): '
+    #               f'{"ERROR" if len(results.errors) else "FAIL"}\n'
+    #               f'  !!! {alert_msg}')
 
     def test_ex_5_3_4(self):
         """Testing last_early function"""
@@ -717,7 +919,7 @@ Where is the love?;The Black Eyed Peas;4:13;
 
     @unittest.skip('Disabled. Enable pycodestyle by commenting this line.')
     def test_pycodestyle(self):
-        """"Test that your code conform to PEP-8."""
+        """Test that your code conform to PEP-8."""
         try:
             import pycodestyle
         except ImportError as ex:
@@ -737,7 +939,7 @@ Where is the love?;The Black Eyed Peas;4:13;
 
     @unittest.skip('Disabled. Enable pylint by commenting this line.')
     def test_pylint(self):
-        """"Lint your code to find programming errors and more."""
+        """Lint your code to find programming errors and more."""
         try:
             from pylint import epylint as lint
         except ImportError as ex:
@@ -768,10 +970,6 @@ Where is the love?;The Black Eyed Peas;4:13;
             if match:
                 rating = match.group(1)
 
-        # print(f'pylint_stdout:\n{output}\n')
-        # first_messages = "\n".join([str(d) for d in messages.values()])
-        # print(f'\nrating: {rating}; msg types: {len(messages)}\n'
-        #       f'{first_messages}')
         if len(messages) >= 1:
             print(f'rating: {rating}/10\n\n'
                   f'Problems found (show first occurrence of each type):')
@@ -786,4 +984,5 @@ Where is the love?;The Black Eyed Peas;4:13;
 
 
 if __name__ == '__main__':
-    unittest.main()
+    test_runner = CustomTestRunner()
+    unittest.main(testRunner=test_runner)
