@@ -1,8 +1,8 @@
 """Automatic tests for self.py course exercises.
 
-These are 36 unit tests for exercises from self.py course.
-Course URL: https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/
+These are unit tests for exercises from self.py course.
 They cover most "open" exercises (code writing tasks) from units 5 to 9.
+Course URL: https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/
 
 In addition there are 2 optional linter tests: style check (PEP-8) and
 logical code checks. To use them, their linter modules should be
@@ -13,9 +13,7 @@ installed on your machine. This can be done by running::
 **Usage:**
 Create a new file named 'self.py' in same directory (as this file).
 Write/copy your implementation of course exercises functions to this
-file (self.py) and run one of the commands blow (from same directory).
-
-To run tests use::
+file (self.py) and run the command blow (from same directory)::
 
     python test_self.py
 
@@ -23,7 +21,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '2.0'
+__version__ = '2.0.1'
 
 import unittest
 from unittest.mock import patch
@@ -121,179 +119,8 @@ def style_me(text: str, style: str = 'white') -> str:
     return styled + text + colorama.Style.RESET_ALL
 
 
-def get_test_display_name(test: unittest.case.TestCase) -> str:
-    """Extract, process and return display name from test.
-
-    :param test: the TestCase object to retreive the info from.
-    :return: display name string.
-    """
-    t_name = test.id()
-    match = re.search(r'test_(?:ex_(\d)_(\d)_(\d)|(\w+))\s*$', t_name)
-    if match and match.group(1) is not None:
-        t_name = f'Exercise {match.group(1)}.{match.group(2)}.{match.group(3)}'
-    elif match and match.group(4) is not None:
-        t_name = match.group(4)
-    description = test.shortDescription()
-    match = re.search(r'Testing (\w+) function', description, re.IGNORECASE)
-    if match:
-        t_name += f' ({match.group(1)})'
-    elif not re.search(r'Testing Ex \d\.\d\.\d', description):
-        t_name += f' ({description[:-1]})'
-
-    return t_name
-
-
-class CustomTestResult(unittest.runner.TextTestResult):
-    """Override default TextTestResult to add printout & count outcomes."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.custom_count = defaultdict(int)
-        self.missing_exercises = []
-
-    def addSuccess(self, test: unittest.case.TestCase) -> None:
-        ex_display = get_test_display_name(test)
-        print(f'{ex_display}: ' + style_me('OK', 'success'))
-        self.custom_count["success"] += 1
-        super().addSuccess(test)
-
-    def addFailure(self, test: unittest.case.TestCase, err) -> None:
-        ex_display = get_test_display_name(test)
-        self.custom_count["problems"] += 1
-        # exception_type, exception_value, exception_tb = err
-        exception_value = err[1]
-        print(f'{style_me(ex_display)}: {style_me("FAIL", "fail")}')
-        print(style_me('---\n' + str(exception_value) + '\n---', "fail"))
-        super().addFailure(test, err)
-
-    def addError(self, test: unittest.case.TestCase, err) -> None:
-        ex_display = get_test_display_name(test)
-        self.custom_count["problems"] += 1
-        # exception_type, exception_value, exception_tb = err
-        exception_value = err[1]
-        print(f'{style_me(ex_display)}: {style_me("ERROR", "fail")}')
-        print(style_me('---\n' + str(exception_value) + '\n---', "fail"))
-        super().addError(test, err)
-
-    def addSkip(self, test: unittest.case.TestCase, reason: str) -> None:
-        ex_display = get_test_display_name(test)
-        if re.search(r'Disabled', reason, re.IGNORECASE):
-            pass
-            # print(f'{ex_display}: Disabled (advanced users can read '
-            #       f'documentaion to enable)')
-        elif re.search(r'Function .+ missing', reason, re.IGNORECASE):
-            self.custom_count["missing"] += 1
-            self.missing_exercises.append(ex_display[9:])
-        else:
-            print(f'{ex_display}: {style_me(reason, "warn")}')
-
-        super().addSkip(test, reason)
-
-    def printErrors(self) -> None:
-        """Abort errors/fails printout."""
-        return
-
-
-class CustomTestRunner(unittest.TextTestRunner):
-    """Override default TextTestRunner result class & run method for
-    custom display.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(resultclass=CustomTestResult, verbosity=0,
-                         *args, **kwargs)
-
-    def run(self, test) -> unittest.result.TestResult:
-        result = super().run(test)
-
-        if result.custom_count["problems"] > 0:
-            print(style_me(
-                f'{result.custom_count["problems"]:2} exercises have problems',
-                'fail'
-            ))
-
-        print(style_me(
-            f'{result.custom_count["success"]:2} exercises done successfully',
-            'success' if result.custom_count["success"] > 0 else 'white'
-        ))
-
-        if result.custom_count["missing"] > 0:
-            print(style_me(
-                f'{result.custom_count["missing"]:2} exercises left to do',
-                'emphasize'
-            ))
-            print('\tNext exercises:', ', '.join(result.missing_exercises[:3]))
-
-        if result.custom_count["problems"] == 0 \
-                and result.custom_count["missing"] == 0:
-            print('\n' + style_me(f'{"Grate Job!":^60}', 'emphasize'))
-            if result.custom_count["success"] >= 36:
-                positive_reinforcement = \
-                    "You are an advanced programmer going above and beyond"
-                print(style_me(
-                    f'{positive_reinforcement:^60}', 'illuminate'
-                ))
-            elif result.custom_count["success"] > 33:
-                print(style_me(
-                    f'{"You did more and I like it!":^60}', 'illuminate'
-                ))
-            if result.custom_count["success"] >= 38:
-                positive_reinforcement = \
-                    '>'*10 + " You have mastered self.py exercises " + '<'*10
-                print(style_me(f'{positive_reinforcement:^60}', 'warn'))
-
-        return result
-
-
 class SelfPyTestCase(unittest.TestCase):
     """Test self.py course exercises"""
-
-    # def tearDown(self) -> None:
-    #     """Custom output after each test case."""
-    #     if not hasattr(self, '_outcome'):
-    #         # abort unless have vital attribute: _outcome
-    #         return
-    #
-    #     # handle results.
-    #     results = self.defaultTestResult()
-    #     self._feedErrorsToResult(results, self._outcome.errors)
-    #
-    #     # normalize test name/description to printout.
-    #     ex_name = self.id()
-    #     m = re.search(r'test_(?:ex_(\d)_(\d)_(\d)|(\w+))\s*$', ex_name)
-    #     if m and m.group(1) is not None:
-    #         ex_name = f'Exercise {m.group(1)}.{m.group(2)}.{m.group(3)}'
-    #         results.custom_count["total"] += 1
-    #     elif m and m.group(4) is not None:
-    #         ex_name = m.group(4)
-    #     description = self.shortDescription()
-    #     m = re.search(r'Testing (\w+) function', description, re.IGNORECASE)
-    #     if m:
-    #         description = m.group(1)
-    #
-    #     # if ex_name == 'Exercise 9.4.1' or ex_name == 'Exercise 9.3.1':
-    #     #     print(f'_outcome vars: ')
-    #     #     pprint(vars(self._outcome))
-    #
-    #     if self._outcome.skipped:
-    #         skip_msg = self._outcome.skipped[0][1]
-    #         if not re.search(r'Function.+missing', skip_msg, re.IGNORECASE):
-    #             print(f'{ex_name} ({description}): {skip_msg}')
-    #         return
-    #     elif results.wasSuccessful():
-    #         print(f'{ex_name} ({description}): OK')
-    #         results.custom_count["success"] += 1
-    #     else:
-    #         results.custom_count["problems"] += 1
-    #         alert =
-    #             results.errors if len(results.errors) else results.failures
-    #         alert = alert[-1][1]
-    #         alert_msg = '\n'.join([
-    #             x for x in alert.split('\n')[1:] if not x.startswith(' ')
-    #         ])
-    #         print(f'{ex_name} ({description}): '
-    #               f'{"ERROR" if len(results.errors) else "FAIL"}\n'
-    #               f'  !!! {alert_msg}')
 
     def test_ex_5_3_4(self):
         """Testing last_early function"""
@@ -981,6 +808,141 @@ Where is the love?;The Black Eyed Peas;4:13;
         self.assertGreater(
             float(rating), 9.85, 'Your code\'s pylint rating is too low'
         )
+
+
+class CustomTestResult(unittest.runner.TextTestResult):
+    """Override default TextTestResult to add printout & count outcomes."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.custom_count = defaultdict(int)
+        self.missing_exercises = []
+
+    def get_custom_count(self):
+        """Retrieve the custom count."""
+        return self.custom_count
+
+    def get_missing_exercises_list(self):
+        """Retrieve the missing exercises list."""
+        return self.missing_exercises
+
+    def addSuccess(self, test: unittest.case.TestCase) -> None:
+        ex_display = self.get_test_display_name(test)
+        print(f'{ex_display}: ' + style_me('OK', 'success'))
+        self.custom_count["success"] += 1
+        super().addSuccess(test)
+
+    def addFailure(self, test: unittest.case.TestCase, err) -> None:
+        ex_display = self.get_test_display_name(test)
+        self.custom_count["problems"] += 1
+        # exception_type, exception_value, exception_tb = err
+        exception_value = err[1]
+        print(f'{style_me(ex_display)}: {style_me("FAIL", "fail")}')
+        print(style_me('---\n' + str(exception_value) + '\n---', "fail"))
+        super().addFailure(test, err)
+
+    def addError(self, test: unittest.case.TestCase, err) -> None:
+        ex_display = self.get_test_display_name(test)
+        self.custom_count["problems"] += 1
+        exception_value = err[1]
+        print(f'{style_me(ex_display)}: {style_me("ERROR", "fail")}')
+        print(style_me('---\n' + str(exception_value) + '\n---', "fail"))
+        super().addError(test, err)
+
+    def addSkip(self, test: unittest.case.TestCase, reason: str) -> None:
+        ex_display = self.get_test_display_name(test)
+        if re.search(r'Disabled', reason, re.IGNORECASE):
+            pass
+            # print(f'{ex_display}: Disabled (advanced users can read '
+            #       f'documentaion to enable)')
+        elif re.search(r'Function .+ missing', reason, re.IGNORECASE):
+            self.custom_count["missing"] += 1
+            self.missing_exercises.append(ex_display[9:])
+        else:
+            print(f'{ex_display}: {style_me(reason, "warn")}')
+
+        super().addSkip(test, reason)
+
+    def printErrors(self) -> None:
+        """Abort errors/fails printout."""
+        return
+
+    @staticmethod
+    def get_test_display_name(test: unittest.case.TestCase) -> str:
+        """Extract, process and return display name from test.
+
+        :param test: the TestCase object to retreive the info from.
+        :return: display name string.
+        """
+        t_name = test.id()
+        match = re.search(r'test_(?:ex_(\d)_(\d)_(\d)|(\w+))\s*$', t_name)
+        if match and match.group(1) is not None:
+            t_name = f'Exercise {match.group(1)}.{match.group(2)}' \
+                     f'.{match.group(3)}'
+        elif match and match.group(4) is not None:
+            t_name = match.group(4)
+        description = test.shortDescription()
+        match = re.search(r'Testing (\w+) function', description, re.I)
+        if match:
+            t_name += f' ({match.group(1)})'
+        elif not re.search(r'Testing Ex \d\.\d\.\d', description):
+            t_name += f' ({description[:-1]})'
+
+        return t_name
+
+
+class CustomTestRunner(unittest.TextTestRunner):
+    """Override default TextTestRunner result class & run method for
+    custom display.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """Override result class to CustomTestResult & mo verbosity"""
+        super().__init__(resultclass=CustomTestResult, verbosity=0,
+                         *args, **kwargs)
+
+    def run(self, test) -> unittest.result.TestResult:
+        """Override by adding custom output to the end."""
+        result = super().run(test)
+        custom_count = result.get_custom_count()
+        missing_exercises = result.get_missing_exercises_list()
+
+        if custom_count["problems"] > 0:
+            print(style_me(
+                f'{custom_count["problems"]:2} exercises have problems',
+                'fail'
+            ))
+
+        print(style_me(
+            f'{custom_count["success"]:2} exercises done successfully',
+            'success' if custom_count["success"] > 0 else 'white'
+        ))
+
+        if custom_count["missing"] > 0:
+            print(style_me(
+                f'{custom_count["missing"]:2} exercises left to do',
+                'emphasize'
+            ))
+            print('\tNext exercises:', ', '.join(missing_exercises[:3]))
+
+        if custom_count["problems"] == 0 and custom_count["missing"] == 0:
+            print('\n' + style_me(f'{"Grate Job!":^60}', 'emphasize'))
+            if custom_count["success"] >= 36:
+                positive_reinforcement = \
+                    "You are an advanced programmer going above and beyond"
+                print(style_me(
+                    f'{positive_reinforcement:^60}', 'illuminate'
+                ))
+            elif custom_count["success"] > 33:
+                print(style_me(
+                    f'{"You did more and I like it!":^60}', 'illuminate'
+                ))
+            if custom_count["success"] >= 38:
+                positive_reinforcement = \
+                    '>'*10 + " You have mastered self.py exercises " + '<'*10
+                print(style_me(f'{positive_reinforcement:^60}', 'warn'))
+
+        return result
 
 
 if __name__ == '__main__':
