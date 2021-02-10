@@ -21,7 +21,7 @@ Your python version should be 3.6+
 More information at: https://github.com/izmirli/self.py_tester/
 """
 
-__version__ = '2.0.1'
+__version__ = '2.1.1'
 
 import unittest
 from unittest.mock import patch
@@ -577,7 +577,8 @@ class SelfPyTestCase(unittest.TestCase):
             self.skipTest('Function count_chars is missing')
         magic_str = "abra cadabra"
         expected = {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
-        self.assertDictEqual(sp.count_chars(magic_str), expected)
+        self.assertDictEqual(sp.count_chars(magic_str), expected,
+                             f'my_str: "{magic_str}"')
 
     def test_ex_8_3_4(self):
         """Testing inverse_dict function"""
@@ -606,7 +607,8 @@ class SelfPyTestCase(unittest.TestCase):
             )
             # print(f'\nto_stdout:\n{to_stdout}<<<\n'
             #       f'cleaned_output:\n{cleaned_output}<<<', file=sys.stderr)
-            self.assertEqual(cleaned_output, HANGMAN_ASCII_PHASE[miss])
+            self.assertEqual(cleaned_output, HANGMAN_ASCII_PHASE[miss],
+                             f'num_of_tries: {miss}')
 
     def test_ex_9_1_1(self):
         """Testing are_files_equal function"""
