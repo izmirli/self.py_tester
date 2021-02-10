@@ -444,9 +444,9 @@ class SelfPyTestCase(unittest.TestCase):
         if 'arrow' not in dir(sp):
             self.skipTest('Function arrow is missing')
         cases = (
-            (['#', 1], '#\n'),
-            (['>', 2], '>\n>>\n>\n'),
-            (['*', 5], '*\n**\n***\n****\n*****\n****\n***\n**\n*\n'),
+            (['*', 5], '*\n**\n***\n****\n*****\n****\n***\n**\n*'),
+            (['>', 2], '>\n>>\n>'),
+            (['#', 1], '#'),
         )
         for case in cases:
             self.assertEqual(sp.arrow(*case[0]), case[1],
@@ -508,7 +508,8 @@ class SelfPyTestCase(unittest.TestCase):
         for case in cases:
             self.assertTupleEqual(
                 tuple(sorted(sp.mult_tuple(*case[0]))),
-                tuple(sorted(case[1]))
+                tuple(sorted(case[1])),
+                f'tuple1: {case[0][0]}, tuple2: {case[0][1]}'
             )
 
     def test_ex_8_2_4(self):
