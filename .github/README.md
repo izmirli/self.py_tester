@@ -6,13 +6,13 @@
 
 ### עברית
 
-* [וידאו הסבר בעברית](https://youtu.be/pzhG9yFcaGg)
+* [וידאו הסבר בעברית](https://youtu.be/9SKrh55OcT8)
 * בין הקבצים במאגר יש שני קבצי הוראות בעברית - קצרות ומלאות
 
 ## Intro
-[Campus-IL's **self.py** course](https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/) is a free Python beginners massive open online course.
+[Campus-IL's **self.py** course](https://campus.gov.il/course/course-v1-cs-gov_cs_selfpy101/) is a free Python beginners massive open online course. It has a lot of exercises, many of them are "open" Python code writing tasks. These exercises are not checked by anybody or anything (except final project, and only for paid upgrade). 
 
-It has a lot of exercises, many of them are Python code writing tasks. These code writing exercises are not checked by anybody or anything (Except the last, and only for paid upgrade). The students, especially as this is a beginners course, don't know if their code fulfilled the exercise requirements. They have no feedback, and might think they did OK even if they have bugs and/or did not implement what they should have.
+Students, especially as this is a beginners course, may not know how to test their solutions. It is common to only partially fulfill the exercise requirement. Having no feedback and no follow up might lead to not doing enough or doing too little.
 
 ## What this project does
 Using Python's [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework, automatic tests were writen for most of the code writing exercises that have functions (Units 5-9). These tests can be used to check student's exercise solution.
@@ -24,7 +24,7 @@ Using Python's [unittest](https://docs.python.org/3/library/unittest.html) unit 
 
 There is one main test file (**`test_self.py`**) and a few auxiliary files - all files should be in the same folder.
 
-In the above folder (test_self.py is in) create a new (empty) file by the name: **`self.py`**
+In the above folder (with test_self.py) create a new (empty for now) file by the name: **`self.py`**
 
 Some external modules should be installed. Though not mandatory, it enhances the tests and easy to do. 
 In the command prompt, at the above folder, run this command:
@@ -46,7 +46,7 @@ For each exercise:
 For **exercise 5.3.4** (the 1st exercise checked in these automated tests), function name mast be **`last_early`**, so add your implementation of the function to **self.py** file:
 ```
 def last_early(my_str):
-    ...
+    # your implementation
 ```
 Open command prompt (cmd) and run the tests with: `python test_self.py`
 
@@ -66,8 +66,11 @@ OK (skipped=37)
 
 For the next exercise, **5.3.5**, function name mast be **`distance`**. Add it to **self.py** file (after the previous function from Exercise 5.3.4):
 ```
+def last_early(my_str):
+    # your implementation
+    
 def distance(num1, num2, num3):
-    ...
+    # your implementation
 ```
 Now run the tests with same command as before: `python test_self.py`
 
